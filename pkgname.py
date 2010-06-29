@@ -61,7 +61,7 @@ def pkgsplitname(fn):
 		else:
 		# boost-jam
 			w = re.split(r'(jam|[-_.])',fn)
-		while w.count(''): w.remove('')
+		w=[i for i in w if i]
 #	print "D",w
 	pkg.append(w.pop(0))
 
