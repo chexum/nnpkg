@@ -165,6 +165,7 @@ def selftest():
 		'kamailio:-:1.5.2-tls:_src:.tar.gz',
 		'ucspi-tcp:-:0.88-ipv6.diff17::.bz2.sig',
 		'pam_p11:-:0.1.2::.tar.gz',
+		'KDiff3Setup:_:0.9.88::.exe',	# is it worth to separate all setup for windows?
 		'linuxha:,:1-0-8:,Linux:.tarp.gz',
 		'linuxha12:+:1.2.2::.tp2',
 		):
