@@ -128,8 +128,6 @@ def processfile(f):
 	dict['fn']=fn
 	return dict
 
-# TODO x11 p11 unix2 wv2
-
 def selftest():
 	for test in (
 		'abcl:-src-:0.20.0::.zip',
@@ -169,6 +167,13 @@ def selftest():
 		'KDiff3Setup:_:0.9.88::.exe',	# is it worth to separate all setup for windows?
 		'linuxha:,:1-0-8:,Linux:.tarp.gz',
 		'linuxha12:+:1.2.2::.tp2',
+		'engine_pkcs11:-:0.1.3::.tar.gz',
+		'libp11:-:0.2.1::.tar.gz',
+		'pam_p11:-:0.1.2::.tar.gz',
+		'libp11:-:0.2.2::.tar.gz',
+		'wv2:-:0.4.2::.tar.bz2',
+		'wv:-:1.2.1::.tar.gz',
+		'libX11:-:1.1.99.2::.tar.bz2',
 		):
 		fn=''.join(test.split(':'))
 #		pkg pre ver tag ext
