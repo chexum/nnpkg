@@ -10,7 +10,8 @@ def pkgsplitname(fn):
 	TAGS='src all snapshot bin source orig open patch mingw32 release stable final alpha beta full package languages unixsrc wip linux'.split(' ')
 	TYPE='src all snapshot current head git cvs svn trunk nightly'.split(' ')
 	EXTO='asc sig sign pgp gpg md5 sha1 sha256 sha512 sha256sum part sha1sum md5sum checksum txt install exe msi'.split(' ')
-	EXTI='zip zoo arc arj z gz bz bz2 xz lzip lz lzma tar cpio tgz tz tbz tbz2 tlz jar war gem egg py patches tarp tp2'.split(' ')
+	EXTI='zip z gz bz bz2 xz lzip lz lzma tar cpio tgz tz tbz tbz2 tlz jar war gem egg py patches tarp tp2'.split(' ')
+	EXTI.extend('zoo arc arj lha lzh'.split(' '))
 	w = re.split(r'([-_. +,])',fn)
 
 	# special handling - either join or separate version from pkg name
