@@ -118,8 +118,10 @@ def pkgsplitname(fn):
 	  strver = strver.replace("-",".")
 	  strver = strver.replace("_",".")
 
+	strpkg = ''.join(pkg).lower()
+
 	return {
-		'pkg':''.join(pkg),
+		'pkg': strpkg,
 		'pre':''.join(pre),
 		'ver':''.join(ver),
 		'tag':''.join(post),
