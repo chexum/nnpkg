@@ -113,12 +113,18 @@ def pkgsplitname(fn):
 
 	pre=w
 
+	strver = ''.join(ver)
+	if "." not in strver:
+	  strver = strver.replace("-",".")
+	  strver = strver.replace("_",".")
+
 	return {
 		'pkg':''.join(pkg),
 		'pre':''.join(pre),
 		'ver':''.join(ver),
 		'tag':''.join(post),
 		'ext':''.join(ext),
+		'dotver': strver,
 		}
 
 def processfile(f):
