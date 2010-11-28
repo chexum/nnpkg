@@ -4,6 +4,21 @@ import os
 import re
 import string
 
+vendors={
+	'libxml2':'xmlsoft',
+	'libxml':'xmlsoft',
+	'libxslt':'xmlsoft',
+
+	'libgcrypt':'GNU',
+	'libgpg-error':'GNU',
+	'gzip':'GNU',
+	'tar':'GNU',
+	'cssc':'GNU',
+	'diffutils':'GNU',
+
+	'yaz':'indexdata',
+}
+
 def pkgsplitname(fn):
 	pkg=[]; pre=[]; ver=[]; post=[]; ext=[]
 	SEP=['-','.','_',' ','+',',']
@@ -119,6 +134,10 @@ def pkgsplitname(fn):
 	  strver = strver.replace("_",".")
 
 	strpkg = ''.join(pkg).lower()
+	if strpkg in vendors:
+	  strvnd = vendors[strpkg]
+	else:
+	  strvnd = ''
 
 	return {
 		'pkg': strpkg,
@@ -126,6 +145,7 @@ def pkgsplitname(fn):
 		'ver':''.join(ver),
 		'tag':''.join(post),
 		'ext':''.join(ext),
+		'vnd': strvnd,
 		'dotver': strver,
 		}
 
