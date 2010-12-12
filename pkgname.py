@@ -15,6 +15,20 @@ vendors={
 	'tar':'GNU',
 	'cssc':'GNU',
 	'diffutils':'GNU',
+	'glpk':'GNU',
+	'wdiff':'GNU',
+	'global':'GNU',
+
+	'binutils':'Cygnus',
+
+	'celt':'xiph.org',
+	'libao':'xiph.org',
+	'libogg':'xiph.org',
+	'liboggz':'xiph.org',
+	'libspiff':'xiph.org',
+	'libxspf':'xiph.org',
+	'speex':'xiph.org',
+	'libfishsound':'xiph.org',
 
 	'yaz':'indexdata',
 }
