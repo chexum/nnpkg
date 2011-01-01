@@ -21,6 +21,10 @@ vendors={
 
 	'binutils':'Cygnus',
 
+        'dhcp':'ISC',
+        'bind':'ISC',
+        'aftr':'ISC',
+
 	'celt':'xiph.org',
 	'libao':'xiph.org',
 	'libogg':'xiph.org',
