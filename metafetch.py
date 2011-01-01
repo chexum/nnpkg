@@ -192,14 +192,19 @@ class MetaConnection:
         ua='Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.13) Gecko/20101203 Firefox/3.6.13 (.NET CLR 3.5.30729)'
 
         self.httpmethod = method
-        self.httpver = httpver
+        if not uri:
+            uri = '/'
 
-        vertag = ''
-        if httpver != '0.9':
-            vertag = ' HTTP/%s'%(httpver,)
+        rqline = [method,uri]
+        if httpver is not None and not httpver.startswith('0'):
+            self.httpver = httpver
+            rqline.append('/'.join(['HTTP',httpver]))
+        else:
+            # meaning 'old'
+            self.httpver = None
 
         # keep the order and contents as common as possible
-        self.writeln('%s %s%s'%(method,uri,vertag,))
+        self.writeln(' '.join(rqline))
         # XXX :PORT
         self.httphdr('Host',self.l3host,debug)
         self.httphdr('User-Agent',ua)
