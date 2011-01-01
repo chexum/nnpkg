@@ -125,6 +125,15 @@ class MetaConnection:
                 self.oversocks = True
         self.dossl()
 
+    def writeflush(self,debug=None):
+        if len(self.unwritten)==0:
+            return
+        if self.overssl:
+            self.sslsock.write(self.unwritten)
+        else:
+            self.sock.send(self.unwritten)
+        self.unwritten=''
+
     def writeln(self,ln='',crlf='\r\n',flush=None,debug=None):
         self.unwritten = ''.join([self.unwritten,ln,crlf])
 
@@ -132,13 +141,11 @@ class MetaConnection:
             print '>',ln
 
         if len(self.unwritten)>16000 or ln == '' or flush:
-            if self.overssl:
-                self.sslsock.write(self.unwritten)
-            else:
-                self.sock.send(self.unwritten)
-            self.unwritten=''
+            self.writeflush()
 
     def readln(self,stripcrlf=None,debug=None):
+        self.writeflush()
+
         start = self.unread.find('\n')
         if start < 0:
             offset = len(self.unread)
@@ -176,6 +183,7 @@ class MetaConnection:
         return s
 
     def readn(self,n,debug=None):
+        self.writeflush()
         offset = len(self.unread)
 
         while offset < n:
