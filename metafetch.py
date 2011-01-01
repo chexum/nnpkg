@@ -231,7 +231,16 @@ class MetaConnection:
         if self.l7proto not in ['http','https']:
             raise WhateverNeeded
 
-        self.httpstatus = self.readln(stripcrlf=True,debug=debug)
+        if self.httpver:
+            self.httpstatus = self.readln(stripcrlf=True,debug=debug)
+        else:
+            self.httpstatus = ''
+
+        statuscode = '200'
+        (httptag,sp,message)=self.httpstatus.partition(' ')
+        if sp:
+            (statuscode,sp,message)=message.partition(' ')
+
         self.httphdrs = {}
 
         while True:
