@@ -234,9 +234,16 @@ class MetaConnection:
 
             colon = s.find(':')
             if colon > 0:
-                h = s[:colon]
+                h = s[:colon].lower()
                 v = s[colon+1:].strip(' ')
-                self.httphdrs[h.lower()]=v
+                if h == 'set-cookie':
+                    arr = [z.strip(' ') for z in v.split(';')]
+                    if len(arr)>0:
+                        (n,v)=arr[0].split('=',1)
+                        print 'cookie',n,arr
+                    #XXX self.cookies
+                else:
+                    self.httphdrs[h]=v
 
         print 'moredata?',self.httpmethod != 'HEAD'
         if self.httpmethod == 'HEAD':
@@ -244,6 +251,7 @@ class MetaConnection:
 
         print 'cl:',self.httpheaders('content-length')
         print 'te:',self.httpheaders('transfer-encoding')
+        print 'cc:',self.httpheadersa('cache-control')
         print 'v:',self.httpheadersa('vary')
 
 def connect(proto,host,port=None,uri='/'):
