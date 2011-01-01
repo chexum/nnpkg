@@ -140,20 +140,29 @@ class MetaConnection:
 
     def readln(self,stripcrlf=None,debug=None):
         start = self.unread.find('\n')
+        if start < 0:
+            offset = len(self.unread)
+        else:
+            offset = 0
+
         while start < 0 and not self.eof:
             if self.overssl:
                 newstr = self.sslsock.read()
             else:
                 newstr = self.sock.recv(16000)
-            if len(newstr) == 0:
+            newn = len(newstr)
+            if newn == 0:
                 self.eof = True
-            else:
-                self.unread = self.unread + newstr
-            start = self.unread.find('\n')
+                break
+
+            start = newstr.find('\n')
+            self.unread = ''.join([self.unread,newstr])
+            if start < 0:
+                offset += newn
 
         if start >= 0:
-            s = self.unread[:start+1]
-            self.unread = self.unread[start+1:]
+            s = self.unread[:offset+start+1]
+            self.unread = self.unread[offset+start+1:]
         else:
             s = self.unread
             self.unread=''
