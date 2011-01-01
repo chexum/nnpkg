@@ -209,7 +209,7 @@ class MetaConnection:
         self.httphdr('Accept-Charset')
         self.httphdr('Keep-Alive','115')
         self.httphdr('Connection','keep-alive')
-        self.httphdr('TE','trailers')
+#       self.httphdr('TE','trailers')
         self.writeln('',flush=True)
 
     def httpheaders(self,h):
