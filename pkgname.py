@@ -18,6 +18,7 @@ vendors={
 	'glpk':'GNU',
 	'wdiff':'GNU',
 	'global':'GNU',
+        'groff':'GNU',
 
 	'binutils':'Cygnus',
 
