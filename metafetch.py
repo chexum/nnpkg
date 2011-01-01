@@ -213,11 +213,13 @@ class MetaConnection:
         self.writeln('',flush=True)
 
     def httpheaders(self,h):
-        if h.lower() in self.httphdrs:
-            return self.httphdrs[h.lower()]
-        return ''
+        if h.lower() not in self.httphdrs:
+            return None
+        return self.httphdrs[h.lower()]
 
     def httpheadersa(self,h):
+        if h.lower() not in self.httphdrs:
+            return None
         return [z.strip(' ') for z in self.httpheaders(h).split(',')]
 
     def httpget(self,debug=None):
