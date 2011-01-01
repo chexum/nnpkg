@@ -261,14 +261,34 @@ class MetaConnection:
                 else:
                     self.httphdrs[h]=v
 
-        print 'moredata?',self.httpmethod != 'HEAD'
-        if self.httpmethod == 'HEAD':
-            return
+        nomoredata = self.httpmethod == 'HEAD' \
+                or statuscode.startswith('1') \
+                or statuscode.startswith('204') \
+                or statuscode.startswith('304')
 
-        print 'cl:',self.httpheaders('content-length')
-        print 'te:',self.httpheaders('transfer-encoding')
+        te = self.httpheaders('transfer-encoding')
+        cl = self.httpheaders('content-length')
+        print 'status?',statuscode
+        print 'moredata?',not nomoredata
+
         print 'cc:',self.httpheadersa('cache-control')
         print 'v:',self.httpheadersa('vary')
+
+        print 'cl:',cl
+        print 'te:',te
+
+        if nomoredata:
+            return
+
+        if te is None or (len(te)==1 and te[0] == 'identity'):
+            if cl is None:
+                print 'scanall'
+            else:
+                print 'scan',cl
+        else:
+            if cl is not None:
+                print 'chunked+cl?'
+            print 'chunked'
 
 def connect(proto,host,port=None,uri='/'):
     mc = MetaConnection(proto,host,port)
