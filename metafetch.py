@@ -316,13 +316,26 @@ class MetaConnection:
 
         if te is None or (len(te)==1 and te[0] == 'identity'):
             if cl is None:
-                print 'scanall'
+                print 'XXX scanall'
             else:
-                print 'scan',cl
+                print 'XXX scan',cl
         else:
             if cl is not None:
                 print 'chunked+cl?'
-            print 'chunked'
+            while True:
+                chunkline = self.readln(stripcrlf=True,debug=debug)
+                n = int(chunkline,16)
+                if n == 0:
+                    print 'chunk',n,'last'
+                    break
+                else:
+                    print 'chunk',n
+                s = self.readn(n)
+                print 'read',len(s)
+                # s is string
+                empty = self.readln(stripcrlf=True,debug=debug)
+                if empty != '':
+                    print 'no separator line?'
 
 def connect(proto,host,port=None,uri='/'):
     mc = MetaConnection(proto,host,port)
