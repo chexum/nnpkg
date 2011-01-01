@@ -109,6 +109,8 @@ class MetaConnection:
     def connect(self):
         self.sock = self._tcpconnect(self.l3host, self.l3port)
         self.dossl()
+        if debug or self.debug or True:
+            print 'conn',self.l3host,self.l3port
 
     def connect_socks(self,sockshost,socksport=1080):
         s = self._tcpconnect(sockshost,socksport)
@@ -124,6 +126,8 @@ class MetaConnection:
                 self.sock = s
                 self.oversocks = True
         self.dossl()
+        if debug or self.debug or True:
+            print 'socks',self.l3host,self.l3port
 
     def writeflush(self,debug=None):
         if len(self.unwritten)==0:
@@ -158,6 +162,8 @@ class MetaConnection:
             else:
                 newstr = self.sock.recv(16000)
             newn = len(newstr)
+            if debug or self.debug or True:
+                print "read %d"%(newn,)
             if newn == 0:
                 self.eof = True
                 break
