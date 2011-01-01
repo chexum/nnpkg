@@ -251,15 +251,15 @@ class MetaConnection:
 #       self.httphdr('TE','trailers')
         self.writeln('',flush=True)
 
-    def httpheaders(self,h):
+    def httpheader(self,h):
         if h.lower() not in self.httphdrs:
             return None
         return self.httphdrs[h.lower()]
 
-    def httpheadersa(self,h):
+    def httpheadera(self,h):
         if h.lower() not in self.httphdrs:
             return None
-        return [z.strip(' ') for z in self.httpheaders(h).split(',')]
+        return [z.strip(' ') for z in self.httpheader(h).split(',')]
 
     def httpget(self,debug=None):
         if self.l7proto not in ['http','https']:
@@ -300,13 +300,13 @@ class MetaConnection:
                 or statuscode.startswith('204') \
                 or statuscode.startswith('304')
 
-        te = self.httpheaders('transfer-encoding')
-        cl = self.httpheaders('content-length')
+        te = self.httpheader('transfer-encoding')
+        cl = self.httpheader('content-length')
         print 'status?',statuscode
         print 'moredata?',not nomoredata
 
-        print 'cc:',self.httpheadersa('cache-control')
-        print 'v:',self.httpheadersa('vary')
+        print 'cc:',self.httpheadera('cache-control')
+        print 'v:',self.httpheadera('vary')
 
         print 'cl:',cl
         print 'te:',te
@@ -342,8 +342,9 @@ def connect(proto,host,port=None,uri='/'):
 #   mc.connect()
     mc.connect_socks('192.168.88.254',9050)
 
-    mc.httpsend(uri,debug=1)
-    mc.httpget(debug=1)
+    if proto.startswith('http'):
+        mc.httpsend(uri,debug=1)
+        mc.httpget(debug=1)
 
 # {'notAfter': 'Jun  8 23:59:59 2011 GMT',
 #  'subjectAltName': (('DNS', 'panel.dreamhost.com'), ('DNS', 'www.panel.dreamhost.com')),
