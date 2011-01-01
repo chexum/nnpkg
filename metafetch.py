@@ -345,6 +345,58 @@ class MetaConnection:
                 if empty != '':
                     print 'no separator line?'
 
+    def readftp(self,debug=None):
+        if self.l7proto not in ['ftp']:
+            raise WhateverNeeded
+        l = self.readln(stripcrlf=True,debug=debug)
+        if len(l)<4:
+            raise notftp
+
+        code=l[:3]
+        dashorspace=l[3]
+        lines=[code,l]
+        if dashorspace == ' ':
+            return lines
+
+        while True:
+            l = self.readln(stripcrlf=True,debug=debug)
+            lines.append(l)
+            if l[3] == ' ' or l=='':
+                break
+        return lines
+
+
+    def ftpsend(self,debug=None):
+        if self.l7proto not in ['ftp']:
+            raise WhateverNeeded
+        l = self.readftp(debug=debug)
+        if l[0] != '220':
+            print "bad"
+            return
+        self.writeln('USER anonymous',debug=debug)
+        l = self.readftp(debug=debug)
+        self.writeln('PASS NcFTP@',debug=debug)
+        l = self.readftp(debug=debug)
+        self.writeln('PASV')
+        l = self.readftp(debug=debug)
+        if l[0] != '227':
+            print "bad",l[0]
+            return
+        loc=l[1]
+        print loc
+        m = re.search('\((\d+,\d+,\d+,\d+),(\d+,\d+)\)',loc)
+        if m:
+            ip = '.'.join(m.group(1).split(','))
+            (phi,plo)=m.group(2).split(',')
+            port=int(phi)*256+int(plo)
+            return 'conn',ip,port
+
+    def ftpls(self,debug=None):
+        self.writeln('LIST',debug=debug)
+        l = self.readftp(debug=debug)
+        print l
+        print "xfer?"
+
 def connect(proto,host,port=None,uri='/'):
     mc = MetaConnection(proto,host,port)
 #   mc.connect()
@@ -353,6 +405,20 @@ def connect(proto,host,port=None,uri='/'):
     if proto.startswith('http'):
         mc.httpsend(uri,debug=1)
         mc.httpget(debug=1)
+    else:
+        res = mc.ftpsend(debug=1)
+        if len(res) == 3:
+            print res
+
+            data = MetaConnection(proto,host,res[2])
+#           data.connect()
+            data.connect_socks('192.168.88.254',9050)
+            mc.ftpls(debug=1)
+            while True:
+                l = data.readln()
+                print '<%s>'%(l,)
+                if l=='':
+                    break
 
 # {'notAfter': 'Jun  8 23:59:59 2011 GMT',
 #  'subjectAltName': (('DNS', 'panel.dreamhost.com'), ('DNS', 'www.panel.dreamhost.com')),
