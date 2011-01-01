@@ -175,6 +175,31 @@ class MetaConnection:
 
         return s
 
+    def readn(self,n,debug=None):
+        offset = len(self.unread)
+
+        while offset < n:
+            if self.overssl:
+                newstr = self.sslsock.read()
+            else:
+                newstr = self.sock.recv(16000)
+            newn = len(newstr)
+            if newn == 0:
+                self.eof = True
+                break
+
+            self.unread = ''.join([self.unread,newstr])
+            offset += newn
+
+        if offset > n:
+            s = self.unread[:n]
+            self.unread = self.unread[n:]
+        else:
+            s = self.unread
+            self.unread = ''
+
+        return s
+
     def httphdr(self,h,v=None,debug=None):
         hdrs={  'host':'',
                 'user-agent':'',
