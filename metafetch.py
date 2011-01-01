@@ -248,14 +248,14 @@ class MetaConnection:
             if s=='':
                 break
 
-            colon = s.find(':')
-            if colon > 0:
-                h = s[:colon].lower()
-                v = s[colon+1:].strip(' ')
+            (h,c,v)=s.partition(':')
+            if c:
+                h = h.lower()
+                v = v.strip(' ')
                 if h == 'set-cookie':
                     arr = [z.strip(' ') for z in v.split(';')]
                     if len(arr)>0:
-                        (n,v)=arr[0].split('=',1)
+                        (n,e,v)=arr[0].partition('=')
                         print 'cookie',n,arr
                     #XXX self.cookies
                 else:
