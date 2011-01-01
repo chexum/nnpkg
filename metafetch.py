@@ -99,6 +99,7 @@ class MetaConnection:
             s = socket.socket(sfam,styp,sprot)
             s.connect(sa)
             return s # XXX if success
+        print 'no connect'
 
     def dossl(self):
         if self.sock and self.overssl:
