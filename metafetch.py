@@ -145,7 +145,7 @@ class MetaConnection:
         else:
             offset = 0
 
-        while start < 0 and not self.eof:
+        while start < 0:
             if self.overssl:
                 newstr = self.sslsock.read()
             else:
