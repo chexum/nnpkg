@@ -112,7 +112,7 @@ class MetaConnection:
         if debug or self.debug or True:
             print 'conn',self.l3host,self.l3port
 
-    def connect_socks(self,sockshost,socksport=1080):
+    def connect_socks(self,sockshost,socksport=1080,debug=None):
         s = self._tcpconnect(sockshost,socksport)
         if s is not None:
             # XXX if name
