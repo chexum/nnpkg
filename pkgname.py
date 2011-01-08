@@ -36,6 +36,10 @@ vendors={
 	'libfishsound':'xiph.org',
 
 	'yaz':'indexdata',
+
+	'pam_yubico':'yubico',
+	'ykclient':'yubico',
+	'libyubikey':'yubico',
 }
 
 def pkgsplitname(fn):
