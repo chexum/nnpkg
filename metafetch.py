@@ -332,7 +332,9 @@ class MetaConnection:
             if cl is None:
                 print 'XXX scanall'
             else:
-                print 'XXX scan',cl
+                print 'scan',cl
+                body = self.readn(cl,debug=debug)
+                print 'read',len(body)
         else:
             if cl is not None:
                 print 'chunked+cl?'
