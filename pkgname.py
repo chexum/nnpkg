@@ -19,6 +19,17 @@ vendors={
 	'wdiff':'GNU',
 	'global':'GNU',
         'groff':'GNU',
+	'm4':'GNU',
+	'libtool':'GNU',
+	'automake':'GNU',
+	'make':'GNU',
+	'autoconf':'GNU',
+	'libunistring':'GNU',
+	'less':'GNU',
+	'guile':'GNU',
+	'grep':'GNU',
+	'bison':'GNU',
+	'gnutls':'GNU',
 
 	'binutils':'Cygnus',
 
