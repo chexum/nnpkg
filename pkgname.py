@@ -56,6 +56,11 @@ vendors={
 	'pam':'Linux',
 }
 
+pkgnames={
+	'openssh':'ssh',
+	'linux-pam':'pam',
+}
+
 def pkgsplitname(fn):
 	pkg=[]; pre=[]; ver=[]; post=[]; ext=[]
 	SEP=['-','.','_',' ','+',',']
@@ -176,8 +181,14 @@ def pkgsplitname(fn):
 	else:
 	  strvnd = ''
 
+	if strpkg in pkgnames:
+		pkgnam = pkgnames[strpkg]
+        else:
+		pkgnam = strpkg
+
 	return {
 		'pkg': strpkg,
+		'pkgnam': pkgnam,
 		'pre':''.join(pre),
 		'ver':''.join(ver),
 		'tag':''.join(post),
