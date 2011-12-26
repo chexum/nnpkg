@@ -18,7 +18,7 @@ vendors={
 	'glpk':'GNU',
 	'wdiff':'GNU',
 	'global':'GNU',
-        'groff':'GNU',
+	'groff':'GNU',
 	'm4':'GNU',
 	'libtool':'GNU',
 	'automake':'GNU',
@@ -33,9 +33,9 @@ vendors={
 
 	'binutils':'Cygnus',
 
-        'dhcp':'ISC',
-        'bind':'ISC',
-        'aftr':'ISC',
+	'dhcp':'ISC',
+	'bind':'ISC',
+	'aftr':'ISC',
 
 	'celt':'xiph.org',
 	'libao':'xiph.org',
