@@ -51,6 +51,9 @@ vendors={
 	'pam_yubico':'yubico',
 	'ykclient':'yubico',
 	'libyubikey':'yubico',
+
+	'linux-pam':'Linux',
+	'pam':'Linux',
 }
 
 def pkgsplitname(fn):
