@@ -57,6 +57,8 @@ vendors={
 
 	'linux-pam':'Linux',
 	'pam':'Linux',
+
+	'gc':'Boehm',
 }
 
 pkgnames={
