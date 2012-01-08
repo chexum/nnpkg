@@ -93,6 +93,10 @@ def pkgsplitname(fn):
 	# gtk sigc++
 	# split without +
 		w = re.split(r'([-_. ])',fn)
+	elif re.search(r'(?i)setup\d*$',w[0]):
+		m = re.match(r'(?i)(.*?)(setup\d*)',w[0])
+		w[0]=m.group(1)
+		w[1]=''.join([m.group(2),w[1]])
 
 	if w[0] in ['jpegsrc','boost','libpng','dz','krb5','openssl','sysvinit','oggenc','qt','pam']:
 		# jpegsrc.v8a.tar.gz
@@ -232,7 +236,7 @@ def selftest():
 		'bind:-:9.6.1-P2::.tar.gz.sha512.asc',
 		'cups:-:1.4.2:-source:.tar.bz2',
 		'ethtool:-:2.6.33-pre1::.tar.gz',
-		'GNUnet:-:0.8.1b::.tar.gz.sig',
+		'GNUnet:-:0.8.1b::.tar.gz.sig/gnunet',
 		'cyrus-sasl:-:2.1.24rc1::.tar.gz',
 		'dhcp:-:4.2.0b2::.tar.gz',
 		'jpeg:src.:v8a::.tar.gz',
@@ -250,7 +254,7 @@ def selftest():
 		'kamailio:-:1.5.2-tls:_src:.tar.gz',
 		'ucspi-tcp:-:0.88-ipv6.diff17::.bz2.sig',
 		'pam_p11:-:0.1.2::.tar.gz',
-		'KDiff3Setup:_:0.9.88::.exe',	# is it worth to separate all setup for windows?
+		'KDiff3:Setup_:0.9.88::.exe/kdiff3',	# is it worth to separate all setup for windows?
 		'linuxha:,:1-0-8:,Linux:.tarp.gz',
 		'linuxha12:+:1.2.2::.tp2',
 		'engine_pkcs11:-:0.1.3::.tar.gz',
@@ -260,10 +264,19 @@ def selftest():
 		'wv2:-:0.4.2::.tar.bz2',
 		'wv:-:1.2.1::.tar.gz',
 		'libX11:-:1.1.99.2::.tar.bz2',
+		'openssh:-:5.9p1::.tar.gz/ssh',
+		'Linux-PAM:-:1.1.5::.tar.bz2/pam',
+		'putty:-:0.61::.tar.gz',
+		'putty:-:0.61:-installer:.exe.DSA',
 		):
-		fn=''.join(test.split(':'))
+		exp=''.join(test.split(':'))
+		w=exp.split('/')
+		fn=w[0]
+		if len(w)>1:
+			res='%(pkg)s:%(pre)s:%(ver)s:%(tag)s:%(ext)s/%(pkgnam)s' % pkgsplitname(w[0])
+		else:
+			res='%(pkg)s:%(pre)s:%(ver)s:%(tag)s:%(ext)s' % pkgsplitname(w[0])
 #		pkg pre ver tag ext
-		res='%(pkg)s:%(pre)s:%(ver)s:%(tag)s:%(ext)s' % pkgsplitname(fn)
 		if test != res:
 			print "fail", fn, res
 			print "want", fn, test
