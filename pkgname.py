@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# vim: ts=2:sw=2:noet
 
 import os
 import re
