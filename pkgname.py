@@ -31,6 +31,8 @@ vendors={
 	'grep':'GNU',
 	'bison':'GNU',
 	'gnutls':'GNU',
+	'gawk':'GNU',
+	'pth':'GNU',
 
 	'binutils':'Cygnus',
 
