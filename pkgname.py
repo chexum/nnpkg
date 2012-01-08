@@ -180,16 +180,17 @@ def pkgsplitname(fn):
 	  strver = strver.replace("-",".")
 	  strver = strver.replace("_",".")
 
-	strpkg = ''.join(pkg).lower()
-	if strpkg in vendors:
-	  strvnd = vendors[strpkg]
+	strpkg = ''.join(pkg)
+	pkg_canonical = strpkg.lower()
+	if pkg_canonical in vendors:
+	  strvnd = vendors[pkg_canonical]
 	else:
 	  strvnd = ''
 
-	if strpkg in pkgnames:
-		pkgnam = pkgnames[strpkg]
+	if pkg_canonical in pkgnames:
+		pkgnam = pkgnames[pkg_canonical]
         else:
-		pkgnam = strpkg
+		pkgnam = pkg_canonical
 
 	return {
 		'pkg': strpkg,
