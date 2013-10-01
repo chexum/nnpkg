@@ -24,6 +24,9 @@ build_dir.set_debug(True)
 #PKGVND=
 #PKGCAT=
 
+# args: zxvf/extract setup build install walk/package
+# TODO: log each
+
 #nnpkg_root=/usr/src/sqlite-autoconf-3080002/.nnpkg
 #nnpkg log config -> |tee /dev/stderr|multilog t s1000000 n10 $NNPKG/config
 #nnpkg configure |
