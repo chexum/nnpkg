@@ -38,13 +38,6 @@ build_dir.setup()
 build_dir.build()
 build_dir.install()
 
-#if not os.path.isdir("ROOT"):
-#build_dir.command(["cxroot","$ROOT","make","INSTALL=install","DESTROOT=$ROOT","install"],
-#["ROOT=%s/ROOT"%(build_dir.get_root(),)])
-# python setup.py install --root "`pwd`/ROOT"
-#else:
-#raise 'Already ROOT'
-#
 if os.path.isdir('ROOT'):
   build_dir.command(["cxfilelist"])
 
