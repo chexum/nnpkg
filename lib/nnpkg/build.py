@@ -33,7 +33,7 @@ class Package:
   def install(self,builddir):
 #ROOT=/usr/src/tig-1.2/ROOT
 #cxroot $ROOT make INSTALL=install DESTDIR=$ROOT install
-    builddir.command(["make","DESTDIR=%s"%(builddir.get_destdir()),"install","install-doc-man"])
+    builddir.command(["make","DESTDIR=$ROOT","install","install-doc-man"],["ROOT=%s"%(builddir.get_destdir())])
 
 class AutoconfPackage(Package):
   def __init__(self,script,dir="."):
