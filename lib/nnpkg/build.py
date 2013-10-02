@@ -4,7 +4,6 @@ import re
 
 def multigrep(fn,pairs):
   found={}
-  print "|".join([search for opt,search,err in pairs])
   re_compiled = re.compile("|".join([search for opt,search,err in pairs]))
 
   with open(fn) as f:
