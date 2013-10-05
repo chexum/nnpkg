@@ -115,10 +115,7 @@ class BuildDir:
       else:
         test_script = "%s/setup.py"%(self.nn_root,)
         if os.path.isfile(test_script):
-          self.pkg = PythonPackage("setup.py")
-#          self.conf_script=test_script;
-#          self.conf_file="setup.py"
-#          self.conf_type="python"
+          self.pkg = PythonPackage(self,"setup.py")
 
   def get_root(self):
     return self.nn_root
