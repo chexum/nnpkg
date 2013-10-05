@@ -136,8 +136,9 @@ class BuildDir:
           os.environ[name]=l
           print "! export",v
     if self.debug:
+      print "!"," ".join([os.path.expandvars(c) for c in cmd])
+    else:
       print "!"," ".join(cmd)
-  #   print "!"," ".join([os.path.expandvars(c) for c in cmd])
       subprocess.check_call([os.path.expandvars(c) for c in cmd])
 
   def setup(self):
