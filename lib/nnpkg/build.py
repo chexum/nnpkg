@@ -30,7 +30,12 @@ class Package:
     builddir.command(["make",])
 
   def install(self,builddir):
-#ROOT=/usr/src/tig-1.2/ROOT
+    possible_targets=[
+      ("install",               "((^|\s)install:|(^|\s)install .*:)",""),
+      ("install-doc-man",       "((^|\s)install-doc-man:|(^|\s)install-doc-man .*:)",""),
+      ]
+    cmdline=["make","DESTDIR=$ROOT",]
+    cmdline.extend(multigrep('Makefile',possible_targets))
 #cxroot $ROOT make INSTALL=install DESTDIR=$ROOT install
     builddir.command(["make","DESTDIR=$ROOT","install","install-doc-man"],["ROOT=%s"%(builddir.get_destdir())])
 
@@ -45,8 +50,21 @@ class AutoconfPackage(Package):
       ("--libexecdir=/usr/lib", "\s--libexecdir=DIR\s","--libexecdir not supported"),
       ("--localstatedir=/var",  "\s--localstatedir=DIR\s","--localstatedir not supported"),
       ("--enable-shared",       "\s--enable-shared\s",""),
-      ("--test",                "\s--test\s",""),
       ]
+
+    if re.match('openldap',builddir.meta['PKG']):
+      possible_opts.extend([
+      ("--enable-ipv6",         "\s--enable-ipv6\s",""),
+      ("--enable-rewrite",      "\s--enable-rewrite\s",""),
+      ("--enable-bdb",          "\s--enable-bdb\s",""),
+      ("--enable-hdb",          "\s--enable-hdb\s",""),
+      ("--enable-meta",         "\s--enable-meta\s",""),
+      ("--enable-ldap",         "\s--enable-ldap\s",""),
+      ("--without-cyrus-sasl",  "\s--with-cyrus-sasl\s",""),
+      ("--disable-spasswd",     "\s--enable-spasswd\s",""),
+      ("--disable-perl",        "\s--enable-perl\s",""),
+      ])
+
     cmdline=[os.path.join(self.conf_dir,self.conf_script)]
     cmdline.extend(multigrep(os.path.join(self.conf_dir,self.conf_script),possible_opts))
     builddir.command(cmdline)
