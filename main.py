@@ -14,7 +14,6 @@ os.environ['PYTHONPATH'] = libpath + ':' + os.environ.get('PYTHONPATH', '')
 
 from nnpkg import build
 build_dir = build.BuildDir(os.environ.get('NNPKG_ROOT',None))
-print "IN",build_dir.get_root()
 build_dir.set_debug(True)
 
 #meta:
