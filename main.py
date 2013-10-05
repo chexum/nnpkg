@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys, os
+import re
 
 argv = sys.argv
 exe = os.path.realpath(argv[0])
@@ -39,6 +40,12 @@ build_dir.install()
 
 if os.path.isdir('ROOT'):
   build_dir.command(["cxfilelist"])
+
+with open('.cxpkg') as f:
+  print
+  for l in f:
+    if not re.search("^[A-Z]+=",l):
+      print l,
 
 sys.exit(1)
 
