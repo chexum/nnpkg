@@ -43,7 +43,7 @@ class Package:
     raise "Can't configure an unknown package!"
 
   def build(self,builddir):
-    builddir.command(["make",])
+    builddir.command(["make",],[],'build')
 
   def install(self,builddir):
     possible_targets=[
@@ -53,7 +53,7 @@ class Package:
     cmdline=["make","DESTDIR=$ROOT",]
     cmdline.extend(multigrep('Makefile',possible_targets))
 #cxroot $ROOT make INSTALL=install DESTDIR=$ROOT install
-    builddir.command(["make","DESTDIR=$ROOT","install","install-doc-man"],["ROOT=%s"%(builddir.get_destdir())])
+    builddir.command(cmdline,["ROOT=%s"%(builddir.get_destdir())],'install')
 
 class AutoconfPackage(Package):
   def __init__(self,script,dir="."):
@@ -86,7 +86,7 @@ class AutoconfPackage(Package):
 
     cmdline=[os.path.join(self.conf_dir,self.conf_script)]
     cmdline.extend(multigrep(os.path.join(self.conf_dir,self.conf_script),possible_opts))
-    builddir.command(cmdline)
+    builddir.command(cmdline,[],'setup')
 
 class PythonPackage(Package):
   def __init__(self,script,dir="."):
@@ -96,10 +96,10 @@ class PythonPackage(Package):
     pass
 
   def build(self,builddir):
-    builddir.command(['python',self.conf_script,'build'])
+    builddir.command(['python',self.conf_script,'build'],[],'build')
 
   def install(self,builddir):
-    builddir.command(['python',self.conf_script,'install','--root',builddir.get_destdir()])
+    builddir.command(['python',self.conf_script,'install','--root',builddir.get_destdir()],[],'install')
 
 class BuildDir:
   def __init__(self,start_dir=None):
@@ -152,7 +152,7 @@ class BuildDir:
       else:
         test_script = "%s/setup.py"%(self.nn_root,)
         if os.path.isfile(test_script):
-          self.pkg = PythonPackage(self,"setup.py")
+          self.pkg = PythonPackage("setup.py")
 
   def get_root(self):
     return self.nn_root
@@ -163,7 +163,7 @@ class BuildDir:
   def set_debug(self,debug):
     self.debug=debug
 
-  def command(self,cmd,vars=None):
+  def command(self,cmd,vars=None,logto=None):
     if vars and len(vars)>0:
       for v in vars:
         (name,line)=v.split("=",1)
@@ -173,8 +173,14 @@ class BuildDir:
           os.environ[name]=l
           print "! export",v
     if self.debug:
-      print "!"," ".join([os.path.expandvars(c) for c in cmd])
+      if logto:
+        print "!%s"%(logto,)," ".join([os.path.expandvars(c) for c in cmd])
+      else:
+        print "!"," ".join([os.path.expandvars(c) for c in cmd])
     else:
+      if logto:
+        print "!%s"%(logto,)," ".join(cmd)
+        pass
       print "!"," ".join(cmd)
       subprocess.check_call([os.path.expandvars(c) for c in cmd])
 
