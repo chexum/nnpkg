@@ -118,6 +118,12 @@ class BuildDir:
     self.debug=False;
     self.nn_root = None
     self.meta={}
+    self.conf_test=["--prefix=/usr --sysconfdir=/etc --libexecdir=/usr/lib --localstatedir=/var --enable-shared"]
+    self.build_test=["all"]
+    self.install_test=["install"]
+#CFLAGS=-Os -fno-asynchronous-unwind-tables -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
+#CXXFLAGS=-Os -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
+#LDFLAGS=-s -Wl,--as-needed
 
     self.exec_env={}
 
