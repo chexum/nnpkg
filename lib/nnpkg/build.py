@@ -57,9 +57,12 @@ class Package:
       ("install",               "((^|\s)install:|(^|\s)install .*:)",""),
       ("install-doc-man",       "((^|\s)install-doc-man:|(^|\s)install-doc-man .*:)",""),
       ]
-    cmdline=["make","DESTDIR=$ROOT",]
-    cmdline.extend(multigrep('Makefile',possible_targets))
-#cxroot $ROOT make INSTALL=install DESTDIR=$ROOT install
+
+    if isinpath('cxroot'):
+      cmdline=['cxroot','$ROOT']
+    else:
+      cmdline=[]
+    cmdline.extend(["make","DESTDIR=$ROOT","INSTALL=install"])
     builddir.command(cmdline,["ROOT=%s"%(builddir.get_destdir())],'install')
 
 class AutoconfPackage(Package):
