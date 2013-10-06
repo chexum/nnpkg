@@ -137,6 +137,8 @@ class BuildDir:
     self.conf_opts=[]
     self.pkg = None
 
+    self.do_multilog = isinpath('multilog')
+
     if start_dir and os.path.isdir(os.path.join(start_dir,'.nnpkg')):
       self.nn_root=start_dir
 
@@ -185,6 +187,13 @@ class BuildDir:
     self.debug=debug
 
   def command(self,cmd,vars=None,logto=None):
+    if self.do_multilog and logto and not self.debug:
+      logdir = os.path.join(self.nn_root,'.nnpkg',logto)
+      try: os.mkdir(logdir)
+      except: pass
+      log_proc = subprocess.Popen(['multilog','t','s999999','n25',logdir],stdin=subprocess.PIPE)
+    else: log_proc = None
+
     if vars and len(vars)>0:
       for v in vars:
         (name,line)=v.split("=",1)
@@ -192,18 +201,23 @@ class BuildDir:
           l = os.path.expandvars(line)
           self.exec_env[name]=l
           os.environ[name]=l
+          if log_proc: log_proc.stdin.write("! export %s\n"%(v,))
           print "! export",v
-    if self.debug:
-      if logto:
-        print "!%s"%(logto,)," ".join([os.path.expandvars(c) for c in cmd])
-      else:
-        print "!"," ".join([os.path.expandvars(c) for c in cmd])
-    else:
-      if logto:
-        print "!%s"%(logto,)," ".join(cmd)
-        pass
-      print "!"," ".join(cmd)
-      subprocess.check_call([os.path.expandvars(c) for c in cmd])
+
+    if log_proc: log_proc.stdin.write("! %s\n"%(" ".join([os.path.expandvars(c) for c in cmd]),))
+    print "!"," ".join(cmd)
+
+    cmd_proc = subprocess.Popen([os.path.expandvars(c) for c in cmd],stdout=subprocess.PIPE)
+    while True:
+      l = cmd_proc.stdout.readline()
+      if log_proc: log_proc.stdin.write(l)
+      print l,
+      if len(l)<=0: break
+    if log_proc:
+      log_proc.stdin.close()
+      log_proc.wait()
+    cmd_proc.wait()
+    return cmd_proc.returncode
 
   def setup(self):
     self.pkg.setup(self);
