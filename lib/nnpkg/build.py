@@ -39,7 +39,7 @@ def isinpath(exe):
       return True
   return False
 
-class Package:
+class Package(object):
   def __init__(self,type,script,dir="."):
     self.conf_script=script
     self.conf_dir=dir
