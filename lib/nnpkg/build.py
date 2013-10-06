@@ -21,7 +21,7 @@ def makeregex(targets):
   return [r'((^|[^#:]+\s)%s(:|\s\[^#:]+:))'%(t,) for t in targets]
 
 def grep_all(tosearch,fn):
-  found={}
+  xfound={}
   if re.match("(^|/)[Mm]ake.*",fn):
     look=makeregex(tosearch)
   else:
@@ -35,11 +35,18 @@ def grep_all(tosearch,fn):
         if res:
           for opt_re,opt in zip(look,tosearch):
             if re.search(opt_re,l):
-              found[opt]=l
+#              print "[%s]=%s"%(opt_re,opt,)
+              # possibly overwriting later occurrences intentionally
+              xfound[opt_re]=opt
   except (OSError, IOError):
     pass
+  res=[]
+  for opt_re,opt in zip(look,tosearch):
+    if opt_re in xfound:
+      res.append(xfound[opt_re])
+      del xfound[opt_re]
 
-  return [x for x in tosearch if x in found]
+  return res
 
 def isinpath(exe):
   for d in os.getenv('PATH','').split(":"):
