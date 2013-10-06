@@ -2,20 +2,6 @@ import os
 import subprocess
 import re
 
-def multigrep(fn,pairs):
-  found={}
-  re_compiled = re.compile("|".join([search for opt,search,err in pairs]))
-
-  with open(fn) as f:
-    for l in f:
-      res = re_compiled.search(l)
-      if res:
-        for opt,search,err in pairs:
-          if re.search(search,l):
-            found[opt]=l
-
-  return [opt for opt,search,err in pairs if opt in found]
-
 def confregex(opts):
   res=[]
   for opt in opts:
@@ -33,6 +19,27 @@ def confregex(opts):
 
 def makeregex(targets):
   return [r'((^|[^#:]+\s)%s(:|\s\[^#:]+:))'%(t,) for t in targets]
+
+def grep_all(tosearch,fn):
+  found={}
+  if re.match("(^|/)[Mm]ake.*",fn):
+    look=makeregex(tosearch)
+  else:
+    look=confregex(tosearch)
+  try:
+#   print "LOOK","|".join(look)
+    re_compiled = re.compile("|".join(look))
+    with open(fn) as f:
+      for l in f:
+        res = re_compiled.search(l)
+        if res:
+          for opt_re,opt in zip(look,tosearch):
+            if re.search(opt_re,l):
+              found[opt]=l
+  except (OSError, IOError):
+    pass
+
+  return [x for x in tosearch if x in found]
 
 def isinpath(exe):
   for d in os.getenv('PATH','').split(":"):
@@ -52,19 +59,26 @@ class Package(object):
     raise "Can't configure an unknown package!"
 
   def build(self,builddir):
-    builddir.command(["make",],[],'build')
+    if re.match('openldap',builddir.meta['PKG']):
+      builddir.build_test = ["depend all"]
+
+    cmdline=["make"]
+    possible_targets=(" ".join(builddir.build_test).split(" "))
+    cmdline.extend(grep_all(possible_targets,"Makefile"))
+    builddir.command(cmdline,[],'build')
 
   def install(self,builddir):
-    possible_targets=[
-      ("install",               "((^|\s)install:|(^|\s)install .*:)",""),
-      ("install-doc-man",       "((^|\s)install-doc-man:|(^|\s)install-doc-man .*:)",""),
-      ]
+    if re.match('tig',builddir.meta['PKG']):
+      builddir.install_test.append("install-doc-man")
 
     if isinpath('cxroot'):
       cmdline=['cxroot','$ROOT']
     else:
       cmdline=[]
     cmdline.extend(["make","DESTDIR=$ROOT","INSTALL=install"])
+
+    possible_targets=(" ".join(builddir.install_test).split(" "))
+    cmdline.extend(grep_all(possible_targets,"Makefile"))
     builddir.command(cmdline,["ROOT=%s"%(builddir.get_destdir())],'install')
 
 class AutoconfPackage(Package):
@@ -72,32 +86,14 @@ class AutoconfPackage(Package):
     Package.__init__(self,'autoconf',script,dir)
 
   def setup(self,builddir):
-    possible_opts=[
-      ("--prefix=/usr",         "\s--prefix=PREFIX\s","--prefix not supported"),
-      ("--sysconfdir=/etc",     "\s--sysconfdir=DIR\s","--sysconfdir not supported"),
-      ("--libexecdir=/usr/lib", "\s--libexecdir=DIR\s","--libexecdir not supported"),
-      ("--localstatedir=/var",  "\s--localstatedir=DIR\s","--localstatedir not supported"),
-      ("--enable-shared",       "\s--enable-shared\s",""),
-      ]
-
-#   print confregex("--enable-shared --prefix=/usr --without-stuff".split(" "))
-#   print makeregex("all install depend".split(" "))
-
     if re.match('openldap',builddir.meta['PKG']):
-      possible_opts.extend([
-      ("--enable-ipv6",         "\s--enable-ipv6\s",""),
-      ("--enable-rewrite",      "\s--enable-rewrite\s",""),
-      ("--enable-bdb",          "\s--enable-bdb\s",""),
-      ("--enable-hdb",          "\s--enable-hdb\s",""),
-      ("--enable-meta",         "\s--enable-meta\s",""),
-      ("--enable-ldap",         "\s--enable-ldap\s",""),
-      ("--without-cyrus-sasl",  "\s--with-cyrus-sasl\s",""),
-      ("--disable-spasswd",     "\s--enable-spasswd\s",""),
-      ("--disable-perl",        "\s--enable-perl\s",""),
-      ])
+      builddir.conf_test.append("--libexecdir=/usr/sbin --localstatedir=/var/lib/openldap-data")
+      builddir.conf_test.append("--enable-ipv6 --enable-rewrite --enable-bdb --enable-hdb --enable-meta --enable-ldap --enable-overlays")
+      builddir.conf_test.append("--without-cyrus-sasl --disable-spasswd --disable-perl")
 
+    possible_opts=(" ".join(builddir.conf_test).split(" "))
     cmdline=[os.path.join(self.conf_dir,self.conf_script)]
-    cmdline.extend(multigrep(os.path.join(self.conf_dir,self.conf_script),possible_opts))
+    cmdline.extend(grep_all(possible_opts,self.conf_script))
     builddir.command(cmdline,[],'setup')
 
 class PythonPackage(Package):
