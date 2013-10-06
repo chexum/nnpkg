@@ -32,6 +32,13 @@ def makeregex(targets):
   for t in targets:
     print t,"((^|\s)%s:|(^|\s)%s\s.*)"%(t,t,)
 
+def isinpath(exe):
+  for d in os.getenv('PATH','').split(":"):
+    xpath = os.path.join(d,exe)
+    if os.path.isfile(xpath) and os.access(xpath,os.X_OK):
+      return True
+  return False
+
 class Package:
   def __init__(self,type,script,dir="."):
     self.conf_script=script
