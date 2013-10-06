@@ -17,20 +17,22 @@ def multigrep(fn,pairs):
   return [opt for opt,search,err in pairs if opt in found]
 
 def confregex(opts):
+  res=[]
   for opt in opts:
     diropt=re.match("^(.*)=(/.*)$",opt)
-    if diropt:
-      print opt,"\s%s=[A-Z]+\s"%(diropt.group(1),)
-    enopt=re.match("^--(en|dis)able-(.*)$",opt)
-    if enopt:
-      print opt,"\s--(en|dis)able-%s\s"%(enopt.group(2),)
-    wopt = re.match("^--with(|out)-(.*)$",opt)
-    if wopt:
-      print opt,"\s--(with|without)-%s\s"%(wopt.group(2),)
+    if diropt: res.append(r'(^\s*%s=[A-Z]+\s)'%(diropt.group(1),))
+    else:
+      enopt=re.match("^--(en|dis)able-(.*)($|=)",opt)
+      if enopt: res.append(r'(^\s*--(en|dis)able-%s(\s|\[|=))'%(enopt.group(2),))
+      else:
+        wopt = re.match("^--with(|out)-(.*)$",opt)
+        if wopt: res.append(r'(^\s*--with(|out)-%s\s)'%(wopt.group(2),))
+        else:
+          res.append('((?!x)x)')
+  return res
 
 def makeregex(targets):
-  for t in targets:
-    print t,"((^|\s)%s:|(^|\s)%s\s.*)"%(t,t,)
+  return [r'((^|[^#:]+\s)%s(:|\s\[^#:]+:))'%(t,) for t in targets]
 
 def isinpath(exe):
   for d in os.getenv('PATH','').split(":"):
