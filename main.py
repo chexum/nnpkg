@@ -15,7 +15,6 @@ os.environ['PYTHONPATH'] = libpath + ':' + os.environ.get('PYTHONPATH', '')
 
 from nnpkg import build
 build_dir = build.BuildDir(os.environ.get('NNPKG_ROOT',None))
-build_dir.set_debug(True)
 
 #meta:
 #PKG=sqlite
@@ -27,7 +26,8 @@ build_dir.set_debug(True)
 # args: zxvf/extract setup build install walk/package
 # TODO: log each
 
-DEBUG=True
+DEBUG=False
+build_dir.set_debug(DEBUG)
 build_dir.setup()
 build_dir.build()
 build_dir.install()
