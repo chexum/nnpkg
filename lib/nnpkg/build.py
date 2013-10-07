@@ -18,7 +18,12 @@ def confregex(opts):
   return res
 
 def makeregex(targets):
-  return [r'((^|[^#:]+\s)%s(:|\s\[^#:]+:))'%(t,) for t in targets]
+  res = []
+  for t in targets:
+    opt=re.match(r"\s*(.*)\s*=\s*(.*)\s*",t)
+    if opt: res.append(r'^\s*%s\s*='%(opt.group(1),))
+    else: res.append(r'((^|[^#:]+\s)%s(:|\s+[^#:]*:))'%(t,))
+  return res
 
 def grep_all(tosearch,fn):
   xfound={}
