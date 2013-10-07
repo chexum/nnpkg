@@ -76,6 +76,11 @@ class Package(object):
   def build(self,builddir):
     if re.match('openldap',builddir.meta['PKG']):
       builddir.build_test = ["depend all"]
+    if re.match('git',builddir.meta['PKG']):
+      builddir.build_test.append("prefix=/usr")
+      builddir.build_test.append("CFLAGS='-Os -s -fno-asynchronous-unwind-tables -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64'")
+      builddir.install_test.append("prefix=/usr")
+      builddir.install_test.append("CFLAGS='-Os -s -fno-asynchronous-unwind-tables -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64'")
 
     cmdline=["make"]
     possible_targets=shlex.split(" ".join(builddir.build_test))
@@ -105,6 +110,23 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--libexecdir=/usr/sbin --localstatedir=/var/lib/openldap-data")
       builddir.conf_test.append("--enable-ipv6 --enable-rewrite --enable-bdb --enable-hdb --enable-meta --enable-ldap --enable-overlays")
       builddir.conf_test.append("--without-cyrus-sasl --disable-spasswd --disable-perl")
+
+    if re.match('pcre',builddir.meta['PKG']):
+      builddir.conf_test.append("--enable-utf8 --enable-unicode-properties --enable-pcre16 --enable-jit")
+      builddir.conf_test.append("--enable-pcregrep-libz --enable-pcregrep-libbz2")
+
+    if re.match('lzip',builddir.meta['PKG']):
+      builddir.conf_test.append("CXXFLAGS='-Os -s -fno-asynchronous-unwind-tables -fomit-frame-pointer  -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64'")
+
+    if re.match('zsh',builddir.meta['PKG']):
+      builddir.conf_test.append("--enable-maildir-support --with-curses-terminfo --disable-gdbm")
+
+    if re.match('groff',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-appresdir=/etc/X11/app-defaults")
+
+    if re.match('bash',builddir.meta['PKG']):
+      # flavour: --enable-minimal-config
+      builddir.conf_test.append("--with-installed-readline --with-curses")
 
     possible_opts=shlex.split(" ".join(builddir.conf_test))
     cmdline=[os.path.join(self.conf_dir,self.conf_script)]
