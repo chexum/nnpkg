@@ -1,6 +1,7 @@
 import os
 import subprocess
 import re
+import shlex
 
 def confregex(opts):
   res=[]
@@ -77,7 +78,7 @@ class Package(object):
       builddir.build_test = ["depend all"]
 
     cmdline=["make"]
-    possible_targets=(" ".join(builddir.build_test).split(" "))
+    possible_targets=shlex.split(" ".join(builddir.build_test))
     cmdline.extend(grep_all(possible_targets,"Makefile"))
     builddir.command(cmdline,[],'build')
 
@@ -91,7 +92,7 @@ class Package(object):
       cmdline=[]
     cmdline.extend(["make","DESTDIR=$ROOT","INSTALL=install"])
 
-    possible_targets=(" ".join(builddir.install_test).split(" "))
+    possible_targets=shlex.split(" ".join(builddir.install_test))
     cmdline.extend(grep_all(possible_targets,"Makefile"))
     builddir.command(cmdline,["ROOT=%s"%(builddir.get_destdir())],'install')
 
@@ -105,7 +106,7 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--enable-ipv6 --enable-rewrite --enable-bdb --enable-hdb --enable-meta --enable-ldap --enable-overlays")
       builddir.conf_test.append("--without-cyrus-sasl --disable-spasswd --disable-perl")
 
-    possible_opts=(" ".join(builddir.conf_test).split(" "))
+    possible_opts=shlex.split(" ".join(builddir.conf_test))
     cmdline=[os.path.join(self.conf_dir,self.conf_script)]
     cmdline.extend(grep_all(possible_opts,self.conf_script))
     builddir.command(cmdline,[],'setup')
