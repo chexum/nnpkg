@@ -6,15 +6,17 @@ def confregex(opts):
   res=[]
   for opt in opts:
     diropt=re.match("^(.*)=(/.*)$",opt)
-    if diropt: res.append(r'(^\s*%s=[A-Z]+\s)'%(diropt.group(1),))
+    if diropt: res.append(r'(\s*%s=[A-Z]+\s)'%(diropt.group(1),))
     else:
       enopt=re.match("^--(en|dis)able-(.*)($|=)",opt)
-      if enopt: res.append(r'(^\s*--(en|dis)able-%s(\s|\[|=))'%(enopt.group(2),))
+      if enopt: res.append(r'(\s*--(en|dis)able-%s(\s|\[|=))'%(enopt.group(2),))
       else:
         wopt = re.match("^--with(|out)-(.*)$",opt)
-        if wopt: res.append(r'(^\s*--with(|out)-%s\s)'%(wopt.group(2),))
+        if wopt: res.append(r'(\s*--with(|out)-%s\s)'%(wopt.group(2),))
         else:
-          res.append('((?!x)x)')
+          varopt=re.match("^(.*?)\s*=\s*(.*)$",opt)
+          if varopt: res.append(r'(\s*%s=[A-Z]+\s)'%(varopt.group(1),))
+          else: res.append('((?!x)x)')
   return res
 
 def makeregex(targets):
