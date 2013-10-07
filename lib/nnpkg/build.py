@@ -214,16 +214,24 @@ class BuildDir:
     if log_proc: log_proc.stdin.write("! %s\n"%(" ".join([os.path.expandvars(c) for c in cmd]),))
     print "!"," ".join(cmd)
 
-    cmd_proc = subprocess.Popen([os.path.expandvars(c) for c in cmd],stdout=subprocess.PIPE)
-    while True:
-      l = cmd_proc.stdout.readline()
-      if log_proc: log_proc.stdin.write(l)
-      print l,
-      if len(l)<=0: break
-    if log_proc:
-      log_proc.stdin.close()
-      log_proc.wait()
-    cmd_proc.wait()
+
+    try:
+      cmd_proc = subprocess.Popen([os.path.expandvars(c) for c in cmd],stdout=subprocess.PIPE)
+      while True:
+        l = cmd_proc.stdout.readline()
+        if log_proc: log_proc.stdin.write(l)
+        print l,
+        if len(l)<=0: break
+      if log_proc:
+        log_proc.stdin.close()
+    except KeyboardInterrupt:
+      if cmd_proc: cmd_proc.terminate()
+      if log_proc: log_proc.terminate()
+    if log_proc: log_proc.wait()
+    if cmd_proc: cmd_proc.wait()
+    if cmd_proc.returncode:
+      import sys
+      sys.exit(1)
     return cmd_proc.returncode
 
   def setup(self):
