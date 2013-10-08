@@ -63,11 +63,16 @@ def isinpath(exe):
   return False
 
 class Package(object):
+  """
+  ************************************************
+  A generic package.
+  For many purposes, it needs to be subclassed.
+  ************************************************
+  """
   def __init__(self,type,script,dir="."):
     self.conf_script=script
     self.conf_dir=dir
     self.conf_type=type
-    self.conf_file=None
 
   def setup(self,builddir):
     raise "Can't configure an unknown package!"
@@ -101,6 +106,11 @@ class Package(object):
     builddir.command(cmdline,["ROOT=%s"%(builddir.get_destdir())],'install')
 
 class AutoconfPackage(Package):
+  """
+  ************************************************
+  How to setup an autoconf-like package.
+  ************************************************
+  """
   def __init__(self,script,dir="."):
     Package.__init__(self,'autoconf',script,dir)
 
@@ -133,6 +143,11 @@ class AutoconfPackage(Package):
     builddir.command(cmdline,[],'setup')
 
 class PythonPackage(Package):
+  """
+  ************************************************
+  How to setup build/install a Python package.
+  ************************************************
+  """
   def __init__(self,script,dir="."):
     Package.__init__(self,'python',script,dir)
 
