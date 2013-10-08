@@ -180,7 +180,7 @@ class AutoconfPackage(Package):
         builddir.command([os.path.join(self.conf_dir,self.conf_script),'--help'],[],'help')
 
     if re.match('bash',builddir.meta['PKG']):
-      # flavour: --enable-minimal-config
+      ## flavour minimal vs none
       builddir.conf_test.append("--with-installed-readline --with-curses")
 
     if re.match('e2fsprogs',builddir.meta['PKG']):
@@ -190,6 +190,14 @@ class AutoconfPackage(Package):
       builddir.env['DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
       builddir.env['STATIC_DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
       builddir.env['LDFLAG_STATIC']=''
+
+    if re.match('gmp',builddir.meta['PKG']):
+      builddir.env['CFLAGS']="-Os -fomit-frame-pointer -fexceptions -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+      builddir.env['CXXFLAGS']="-Os -fomit-frame-pointer -fexceptions -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+      builddir.conf_test.append("--enable-cxx --enable-mpfr --enable-mpbsd")
+      ## flavour i386 vs i686
+      builddir.conf_test.append("--build=i386-pc-linux-gnu")
+
 
     if re.match('gnupg',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-gpgtar --libexecdir=/usr/lib/gnupg")
@@ -221,6 +229,7 @@ class AutoconfPackage(Package):
     if re.match('vim',builddir.meta['PKG']):
       builddir.conf_test.append("--disable-selinux --enable-pythoninterp --enable-cscope --enable-multibyte --enable-gui=gtk2")
       builddir.conf_files.append("src/auto/configure")
+      ## flavour nogui (vs gtk2)
 #     builddir.conf_test.append("--disable-gui --without-x --disable-xim")
 
     if re.match('zsh',builddir.meta['PKG']):
