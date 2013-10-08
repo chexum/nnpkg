@@ -28,25 +28,29 @@ def makeregex(targets):
     else: res.append(r'((^|[^#:]+\s)%s(:|\s+[^#:]*:))'%(t,))
   return res
 
-def grep_all(tosearch,fn):
+def grep_all(tosearch,files):
   xfound={}
-  if re.match("(^|/)[Mm]ake.*",fn):
-    look=makeregex(tosearch)
-  else:
-    look=confregex(tosearch)
-  try:
-#   print "LOOK","|".join(look)
-    re_compiled = re.compile("|".join(look))
-    with open(fn) as f:
-      for l in f:
-        res = re_compiled.search(l)
-        if res:
-          for opt_re,opt in zip(look,tosearch):
-            if re.search(opt_re,l):
-              # possibly overwriting later occurrences intentionally
-              xfound[opt_re]=opt
-  except (OSError, IOError):
-    pass
+  look=''
+  for fn in files:
+    # won't work for multiple different types
+    if re.match("(^|/)[Mm]ake.*",fn):
+      look=makeregex(tosearch)
+    else:
+      look=confregex(tosearch)
+    try:
+#     print "LOOK","|".join(look)
+      re_compiled = re.compile("|".join(look))
+      with open(fn) as f:
+        for l in f:
+          res = re_compiled.search(l)
+          if res:
+            for opt_re,opt in zip(look,tosearch):
+              if re.search(opt_re,l):
+                # possibly overwriting later occurrences intentionally
+                xfound[opt_re]=opt
+    except (OSError, IOError):
+      pass
+
   res=[]
   for opt_re,opt in zip(look,tosearch):
     if opt_re in xfound:
@@ -88,7 +92,7 @@ class Package(object):
 
     cmdline=["make"]
     possible_targets=shlex.split(" ".join(builddir.build_test))
-    cmdline.extend(grep_all(possible_targets,"Makefile"))
+    cmdline.extend(grep_all(possible_targets,builddir.make_files))
     builddir.command(cmdline,[],'build')
 
   def install(self,builddir):
@@ -102,7 +106,7 @@ class Package(object):
     cmdline.extend(["make","DESTDIR=$ROOT","INSTALL=install"])
 
     possible_targets=shlex.split(" ".join(builddir.install_test))
-    cmdline.extend(grep_all(possible_targets,"Makefile"))
+    cmdline.extend(grep_all(possible_targets,builddir.make_files))
     builddir.command(cmdline,["ROOT=%s"%(builddir.get_destdir())],'install')
 
 class AutoconfPackage(Package):
@@ -115,6 +119,9 @@ class AutoconfPackage(Package):
     Package.__init__(self,'autoconf',script,dir)
 
   def setup(self,builddir):
+    if self.conf_script:
+      builddir.conf_files.append(self.conf_script)
+
     if re.match('openldap',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/usr/sbin --localstatedir=/var/lib/openldap-data")
       builddir.conf_test.append("--enable-ipv6 --enable-rewrite --enable-bdb --enable-hdb --enable-meta --enable-ldap --enable-overlays")
@@ -153,7 +160,7 @@ class AutoconfPackage(Package):
       env.append("%s=%s"%(v,builddir.env[v]))
     possible_opts=shlex.split(" ".join(builddir.conf_test))
     cmdline=[os.path.join(self.conf_dir,self.conf_script)]
-    cmdline.extend(grep_all(possible_opts,self.conf_script))
+    cmdline.extend(grep_all(possible_opts,builddir.conf_files))
     builddir.command(cmdline,env,'setup')
 
 class PythonPackage(Package):
@@ -188,6 +195,8 @@ class BuildDir:
     self.env['CXX']="g++"
     self.env['CXXFLAGS']="-Os -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
     self.env['LDFLAGS']="-s -Wl,--as-needed"
+    self.conf_files=[]
+    self.make_files=['Makefile',]
 
     self.exec_env={}
 
