@@ -82,13 +82,19 @@ class Package(object):
     raise "Can't configure an unknown package!"
 
   def build(self,builddir):
-    if re.match('openldap',builddir.meta['PKG']):
-      builddir.build_test = ["depend all"]
+
+    if re.match('bzip2',builddir.meta['PKG']):
+      builddir.build_test.append("PREFIX=/usr")
+      builddir.install_test.append("PREFIX=/usr")
+
     if re.match('git',builddir.meta['PKG']):
       builddir.build_test.append("prefix=/usr")
       builddir.build_test.append("CFLAGS=$CFLAGS")
       builddir.install_test.append("prefix=/usr")
       builddir.install_test.append("CFLAGS=$CFLAGS")
+
+    if re.match('openldap',builddir.meta['PKG']):
+      builddir.build_test = ["depend all"]
 
     cmdline=["make"]
     possible_targets=shlex.split(" ".join(builddir.build_test))
@@ -122,6 +128,28 @@ class AutoconfPackage(Package):
     if self.conf_script:
       builddir.conf_files.append(self.conf_script)
 
+    if re.match('bash',builddir.meta['PKG']):
+      # flavour: --enable-minimal-config
+      builddir.conf_test.append("--with-installed-readline --with-curses")
+
+    if re.match('e2fsprogs',builddir.meta['PKG']):
+      builddir.conf_test.append("--enable-dynamic-e2fsck --enable-fsck --enable-blkid-devmapper --enable-elf-shlibs")
+      builddir.conf_test.append("--disable-libblkid --disable-libuuid --disable-uuidd")
+      builddir.env['DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
+      builddir.env['STATIC_DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
+      builddir.env['LDFLAG_STATIC']=''
+
+    if re.match('groff',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-appresdir=/etc/X11/app-defaults")
+
+    if re.match('LVM2',builddir.meta['PKG']):
+      builddir.conf_test.append("--sbindir=/sbin --libdir=/lib --exec-prefix= --enable-static_link")
+      builddir.make_files.append('make.tmpl')
+
+    if re.match('lzip',builddir.meta['PKG']):
+      builddir.conf_test.append("CXXFLAGS=$CXXFLAGS")
+      builddir.conf_test.append("LDFLAGS=$LDFLAGS")
+
     if re.match('openldap',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/usr/sbin --localstatedir=/var/lib/openldap-data")
       builddir.conf_test.append("--enable-ipv6 --enable-rewrite --enable-bdb --enable-hdb --enable-meta --enable-ldap --enable-overlays")
@@ -131,30 +159,12 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--enable-utf8 --enable-unicode-properties --enable-pcre16 --enable-jit")
       builddir.conf_test.append("--enable-pcregrep-libz --enable-pcregrep-libbz2")
 
-    if re.match('lzip',builddir.meta['PKG']):
-      builddir.conf_test.append("CXXFLAGS=$CXXFLAGS")
-      builddir.conf_test.append("LDFLAGS=$LDFLAGS")
+    if re.match('tar',builddir.meta['PKG']):
+      builddir.conf_test.append("--libexecdir=/etc")
+      builddir.env['tar_cv_path_RSH']='/usr/bin/ssh'
 
     if re.match('zsh',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-maildir-support --with-curses-terminfo --disable-gdbm")
-
-    if re.match('groff',builddir.meta['PKG']):
-      builddir.conf_test.append("--with-appresdir=/etc/X11/app-defaults")
-
-    if re.match('bash',builddir.meta['PKG']):
-      # flavour: --enable-minimal-config
-      builddir.conf_test.append("--with-installed-readline --with-curses")
-
-    if re.match('LVM2',builddir.meta['PKG']):
-      builddir.conf_test.append("--sbindir=/sbin --libdir=/lib --exec-prefix= --enable-static_link")
-      builddir.make_files.append('make.tmpl')
-
-    if re.match('e2fsprogs',builddir.meta['PKG']):
-      builddir.conf_test.append("--enable-dynamic-e2fsck --enable-fsck --enable-blkid-devmapper --enable-elf-shlibs")
-      builddir.conf_test.append("--disable-libblkid --disable-libuuid --disable-uuidd")
-      builddir.env['DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
-      builddir.env['STATIC_DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
-      builddir.env['LDFLAG_STATIC']=''
 
     env=[]
     for v in sorted(builddir.env.iterkeys()):
