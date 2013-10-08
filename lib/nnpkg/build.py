@@ -43,7 +43,6 @@ def grep_all(tosearch,fn):
         if res:
           for opt_re,opt in zip(look,tosearch):
             if re.search(opt_re,l):
-#              print "[%s]=%s"%(opt_re,opt,)
               # possibly overwriting later occurrences intentionally
               xfound[opt_re]=opt
   except (OSError, IOError):
