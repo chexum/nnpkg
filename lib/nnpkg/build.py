@@ -109,7 +109,7 @@ class Package(object):
       cmdline=['cxroot','$ROOT']
     else:
       cmdline=[]
-    cmdline.extend(["make","DESTDIR=$ROOT","INSTALL=install"])
+    cmdline.extend(["make","DESTDIR=$ROOT"])
 
     possible_targets=shlex.split(" ".join(builddir.install_test))
     cmdline.extend(grep_all(possible_targets,builddir.make_files))
@@ -199,7 +199,7 @@ class BuildDir:
     self.meta={}
     self.conf_test=["--prefix=/usr --sysconfdir=/etc --libexecdir=/usr/lib --localstatedir=/var --enable-shared"]
     self.build_test=["all"]
-    self.install_test=["install"]
+    self.install_test=["install","INSTALL=install"]
     self.env={}
     self.env['CC']="gcc"
     self.env['CFLAGS']="-Os -fno-asynchronous-unwind-tables -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
