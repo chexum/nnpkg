@@ -147,6 +147,7 @@ class AutoconfPackage(Package):
 
     if re.match('LVM2',builddir.meta['PKG']):
       builddir.conf_test.append("--sbindir=/sbin --libdir=/lib --exec-prefix= --enable-static_link")
+      builddir.make_files.append('make.tmpl')
 
     if re.match('e2fsprogs',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-dynamic-e2fsck --enable-fsck --enable-blkid-devmapper --enable-elf-shlibs")
