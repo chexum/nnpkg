@@ -140,6 +140,27 @@ class CmakePackage(Package):
     cmd.extend(".")
     builddir.command(cmd,[],'build')
 
+class JamPackage(Package):
+  """
+  ************************************************
+  How to setup build/install Boost as a Jam package.
+  ************************************************
+  """
+  def __init__(self,script,dir="."):
+    Package.__init__(self,'jam',script,dir)
+
+  def setup(self,builddir):
+    env=[]
+    for v in sorted(builddir.env.iterkeys()):
+      env.append("%s=%s"%(v,builddir.env[v]))
+    builddir.command(['sh','bootstrap.sh'],env,'setup')
+
+  def build(self,builddir):
+    builddir.command(['./bjam','release','debug','threading=multi','toolset=gcc','--layout=tagged'],[],'build')
+
+  def install(self,builddir):
+    builddir.command(['./bjam','install','--layout=tagged','--prefix=%s'%(builddir.get_destdir(),)],[],'install')
+
 class AutoconfPackage(Package):
   """
   ************************************************
@@ -301,8 +322,11 @@ class BuildDir:
           if os.path.isfile(test_script):
             self.pkg = PythonPackage("setup.py")
           else:
-            self.pkg = Package("unknown",None)
-
+            test_script = "%s/boost-build.jam"%(self.nn_root,)
+            if os.path.isfile(test_script):
+              self.pkg = JamPackage("Jamroot")
+            else:
+              self.pkg = Package("unknown",None)
 
   def get_root(self):
     return self.nn_root
