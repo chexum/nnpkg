@@ -31,16 +31,14 @@ def makeregex(targets):
 
 def grep_all(tosearch,files):
   xfound={}
-  look=''
+  if re.match("(^|.*/|.*\.)([Mm]ake.*)",files[0]):
+    look=makeregex(tosearch)
+  else:
+    look=confregex(tosearch)
+  re_compiled = re.compile("|".join(look))
   for fn in files:
-    # won't work for multiple different types
-    if re.match("(^|.*/)([Mm]ake.*|build.*)",fn):
-      look=makeregex(tosearch)
-    else:
-      look=confregex(tosearch)
     try:
 #     print "LOOK","|".join(look)
-      re_compiled = re.compile("|".join(look))
       with open(fn) as f:
         for l in f:
           res = re_compiled.search(l)
