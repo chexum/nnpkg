@@ -143,6 +143,7 @@ class AutoconfPackage(Package):
     if re.match('e2fsprogs',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-dynamic-e2fsck --enable-fsck --enable-blkid-devmapper --enable-elf-shlibs")
       builddir.conf_test.append("--disable-libblkid --disable-libuuid --disable-uuidd")
+      builddir.install_test.append("install-libs")
       builddir.env['DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
       builddir.env['STATIC_DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
       builddir.env['LDFLAG_STATIC']=''
