@@ -82,9 +82,9 @@ class Package(object):
       builddir.build_test = ["depend all"]
     if re.match('git',builddir.meta['PKG']):
       builddir.build_test.append("prefix=/usr")
-      builddir.build_test.append("CFLAGS='-Os -s -fno-asynchronous-unwind-tables -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64'")
+      builddir.build_test.append("CFLAGS=$CFLAGS")
       builddir.install_test.append("prefix=/usr")
-      builddir.install_test.append("CFLAGS='-Os -s -fno-asynchronous-unwind-tables -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64'")
+      builddir.install_test.append("CFLAGS=$CFLAGS")
 
     cmdline=["make"]
     possible_targets=shlex.split(" ".join(builddir.build_test))
@@ -125,7 +125,8 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--enable-pcregrep-libz --enable-pcregrep-libbz2")
 
     if re.match('lzip',builddir.meta['PKG']):
-      builddir.conf_test.append("CXXFLAGS='-Os -s -fno-asynchronous-unwind-tables -fomit-frame-pointer  -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64'")
+      builddir.conf_test.append("CXXFLAGS=$CXXFLAGS")
+      builddir.conf_test.append("LDFLAGS=$LDFLAGS")
 
     if re.match('zsh',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-maildir-support --with-curses-terminfo --disable-gdbm")
@@ -136,6 +137,16 @@ class AutoconfPackage(Package):
     if re.match('bash',builddir.meta['PKG']):
       # flavour: --enable-minimal-config
       builddir.conf_test.append("--with-installed-readline --with-curses")
+
+    if re.match('LVM2',builddir.meta['PKG']):
+      builddir.conf_test.append("--sbindir=/sbin --libdir=/lib --exec-prefix= --enable-static_link")
+
+    if re.match('e2fsprogs',builddir.meta['PKG']):
+      builddir.conf_test.append("--enable-dynamic-e2fsck --enable-fsck --enable-blkid-devmapper --enable-elf-shlibs")
+      builddir.conf_test.append("--disable-libblkid --disable-libuuid --disable-uuidd")
+      builddir.env['DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
+      builddir.env['STATIC_DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
+      builddir.env['LDFLAG_STATIC']=''
 
     env=[]
     for v in sorted(builddir.env.iterkeys()):
