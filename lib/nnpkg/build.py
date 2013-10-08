@@ -124,6 +124,21 @@ class Package(object):
     cmdline.extend(grep_all(possible_targets,builddir.make_files))
     builddir.command(cmdline,["ROOT=%s"%(builddir.get_destdir())],'install')
 
+class CmakePackage(Package):
+  """
+  ************************************************
+  How to setup build/install a cmake package.
+  ************************************************
+  """
+  def __init__(self,script,dir="."):
+    Package.__init__(self,'cmake',script,dir)
+
+  def setup(self,builddir):
+    cmd=['cmake']
+    cmd.extend(builddir.cmake_test)
+    cmd.extend(".")
+    builddir.command(cmd,[],'build')
+
 class AutoconfPackage(Package):
   """
   ************************************************
@@ -216,6 +231,7 @@ class BuildDir:
     self.nn_root = None
     self.meta={}
     self.conf_test=["--prefix=/usr --sysconfdir=/etc --libexecdir=/usr/lib --localstatedir=/var --enable-shared"]
+    self.cmake_test=["-DCMAKE_INSTALL_PREFIX=/usr"]
     self.build_test=["all"]
     self.install_test=["install","INSTALL=install"]
     self.env={}
@@ -254,24 +270,33 @@ class BuildDir:
 
         check_dir = os.path.split(check_dir)[0]
 
-    with open(os.path.join(check_dir,'.cxpkg')) as f:
-      for l in f:
-        res = re.match("([A-Z]+)=(.*?)\r?\n?$",l)
-        if res:
-          self.meta[res.group(1)]=res.group(2)
-          print "meta",res.group(1),res.group(2)
+    try:
+      with open(os.path.join(check_dir,'.cxpkg')) as f:
+        for l in f:
+          res = re.match("([A-Z]+)=(.*?)\r?\n?$",l)
+          if res:
+            self.meta[res.group(1)]=res.group(2)
+            print "meta",res.group(1),res.group(2)
+    except (OSError, IOError):
+      print "Cannot find .cxpkg"
+      sys.exit(1)
 #meta: PKG=sqlite PKGNAM=sqlite3 PKGVER=3.8.2 PKGVND= PKGCAT=
 
     if self.nn_root:
-      test_script = "%s/configure"%(self.nn_root,)
+      test_script= "%s/CMakeLists.txt"%(self.nn_root,)
       if os.path.isfile(test_script):
-        self.pkg = AutoconfPackage("configure")
+        self.pkg = CmakePackage("CMakeListst.txt")
       else:
-        test_script = "%s/setup.py"%(self.nn_root,)
+        test_script = "%s/configure"%(self.nn_root,)
         if os.path.isfile(test_script):
-          self.pkg = PythonPackage("setup.py")
+          self.pkg = AutoconfPackage("configure")
         else:
-          self.pkg = Package("unknown",None)
+          test_script = "%s/setup.py"%(self.nn_root,)
+          if os.path.isfile(test_script):
+            self.pkg = PythonPackage("setup.py")
+          else:
+            self.pkg = Package("unknown",None)
+
 
   def get_root(self):
     return self.nn_root
