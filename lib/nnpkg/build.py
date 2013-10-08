@@ -6,16 +6,16 @@ import shlex
 def confregex(opts):
   res=[]
   for opt in opts:
-    diropt=re.match("^(.*)=(/.*)$",opt)
+    diropt=re.match("^\!?(.*)=(/.*)$",opt)
     if diropt: res.append(r'(\s*%s=[A-Z]+\s)'%(diropt.group(1),))
     else:
-      enopt=re.match("^--(en|dis)able-(.*)($|=)",opt)
+      enopt=re.match("^\!?--(en|dis)able-(.*)($|=)",opt)
       if enopt: res.append(r'(\s*--(en|dis)able-%s(\s|\[|=))'%(enopt.group(2),))
       else:
-        wopt = re.match("^--with(|out)-(.*)$",opt)
+        wopt = re.match("^\!?--with(|out)-(.*)$",opt)
         if wopt: res.append(r'(\s*--with(|out)-%s\s)'%(wopt.group(2),))
         else:
-          varopt=re.match("^(.*?)\s*=\s*(.*)$",opt)
+          varopt=re.match("^\!?(.*?)\s*=\s*(.*)$",opt)
           if varopt: res.append(r'(\s*%s=[A-Z]+\s)'%(varopt.group(1),))
           else: res.append('((?!x)x)')
   return res
@@ -23,7 +23,7 @@ def confregex(opts):
 def makeregex(targets):
   res = []
   for t in targets:
-    opt=re.match(r"\s*(.*)\s*=\s*(.*)\s*",t)
+    opt=re.match(r"\!?\s*(.*)\s*=\s*(.*)\s*",t)
     if opt: res.append(r'^\s*%s\s*='%(opt.group(1),))
     else: res.append(r'((^|[^#:]+\s)%s(:|\s+[^#:]*:))'%(t,))
   return res
@@ -54,7 +54,8 @@ def grep_all(tosearch,files):
   res=[]
   for opt_re,opt in zip(look,tosearch):
     if opt_re in xfound:
-      res.append(xfound[opt_re])
+      if "!" not in xfound[opt_re]:
+        res.append(xfound[opt_re])
       del xfound[opt_re]
 
   return res
