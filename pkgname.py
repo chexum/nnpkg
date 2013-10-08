@@ -276,9 +276,9 @@ def pkgsplitname(fn):
 			'readline','ncurses',]:
 		w[0]=m.group(1)
 		w.insert(1,m.group(2))
-	elif re.search(r'(?i)(gtk\+|c\+)',fn):
-	# gtk sigc++
-	# split without +
+	elif re.search(r'([Gg]tk\+|[Cc]\+)',fn):
+	# gtk sigc++ -resplit without +
+		SEP=['-','.','_',' ',',']
 		w = re.split(r'([-_. ])',fn)
 	elif re.search(r'(?i)setup\d*$',w[0]):
 		m = re.match(r'(?i)(.*?)(setup\d*)',w[0])
@@ -466,7 +466,7 @@ def selftest():
 		'dhcp:-:4.2.0b2::.tar.gz',
 		'jpeg:src.:v8a::.tar.gz',
 		'libpng:-:1.2.41:-apng:.patch',
-		'gtk+:-:2.20.1::.sha256sum',
+		'gtk+:-:2.20.1::.sha256sum/gtk',
 		'libconic:_:0.24+0m5::.tar.gz',
 		'libsigc++:-:2.2.7::.tar.bz2',
 		'openssl:-:1.0.0:+srp:-patch.txt',
@@ -499,7 +499,7 @@ def selftest():
 		'TrueCrypt: Setup :6.3::.exe.sig',
 		'LVM2:.:2.02.64::.tgz',
 		'sqlite:-autoconf-:3070603::.tar.gz/sqlite3',
-		'gtk:+-:2.24.8::.tar.xz/gtk',
+		'gtk+:-:2.24.8::.tar.xz/gtk',
 		'json-c:-:0.9::.tar.gz/json',
 		):
 		exp=''.join(test.split(':'))
