@@ -1,7 +1,5 @@
-import os
-import subprocess
-import re
-import shlex
+import os,sys,subprocess
+import re,shlex
 
 def confregex(opts):
   res=[]
@@ -320,7 +318,6 @@ class BuildDir:
     if log_proc: log_proc.wait()
     if cmd_proc: cmd_proc.wait()
     if cmd_proc.returncode:
-      import sys
       sys.exit(1)
     return cmd_proc.returncode
 
