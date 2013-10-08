@@ -420,6 +420,9 @@ def pkgsplitname(fn):
 			pkg_canonical='sqlite'
 			pkgnam='sqlite3'
 
+	if pkgnam=='lvm2':
+		pkgnam='lvm'
+
 	if pkgnam=='libusbx':
 		pkgnam='libusb'
 
