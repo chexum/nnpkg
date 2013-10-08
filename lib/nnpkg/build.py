@@ -156,6 +156,9 @@ class AutoconfPackage(Package):
       builddir.env['STATIC_DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
       builddir.env['LDFLAG_STATIC']=''
 
+    if re.match('gnupg',builddir.meta['PKG']):
+      builddir.conf_test.append("--enable-gpgtar")
+
     if re.match('groff',builddir.meta['PKG']):
       builddir.conf_test.append("--with-appresdir=/etc/X11/app-defaults")
 
