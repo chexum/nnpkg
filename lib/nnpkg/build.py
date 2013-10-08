@@ -137,10 +137,13 @@ class AutoconfPackage(Package):
       # flavour: --enable-minimal-config
       builddir.conf_test.append("--with-installed-readline --with-curses")
 
+    env=[]
+    for v in sorted(builddir.env.iterkeys()):
+      env.append("%s=%s"%(v,builddir.env[v]))
     possible_opts=shlex.split(" ".join(builddir.conf_test))
     cmdline=[os.path.join(self.conf_dir,self.conf_script)]
     cmdline.extend(grep_all(possible_opts,self.conf_script))
-    builddir.command(cmdline,[],'setup')
+    builddir.command(cmdline,env,'setup')
 
 class PythonPackage(Package):
   """
@@ -168,9 +171,12 @@ class BuildDir:
     self.conf_test=["--prefix=/usr --sysconfdir=/etc --libexecdir=/usr/lib --localstatedir=/var --enable-shared"]
     self.build_test=["all"]
     self.install_test=["install"]
-#CFLAGS=-Os -fno-asynchronous-unwind-tables -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
-#CXXFLAGS=-Os -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
-#LDFLAGS=-s -Wl,--as-needed
+    self.env={}
+    self.env['CC']="gcc"
+    self.env['CFLAGS']="-Os -fno-asynchronous-unwind-tables -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+    self.env['CXX']="g++"
+    self.env['CXXFLAGS']="-Os -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+    self.env['LDFLAGS']="-s -Wl,--as-needed"
 
     self.exec_env={}
 
