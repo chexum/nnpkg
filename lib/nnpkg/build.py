@@ -33,7 +33,7 @@ def grep_all(tosearch,files):
   look=''
   for fn in files:
     # won't work for multiple different types
-    if re.match("(^|/)[Mm]ake.*",fn):
+    if re.match("(^|.*/)([Mm]ake.*|build.*)",fn):
       look=makeregex(tosearch)
     else:
       look=confregex(tosearch)
@@ -80,13 +80,20 @@ class Package(object):
     self.conf_type=type
 
   def setup(self,builddir):
-    raise "Can't configure an unknown package!"
+    if re.match('bzip2',builddir.meta['PKG']):
+      pass
+    else:
+      raise "Can't configure an unknown package!"
 
   def build(self,builddir):
+    if re.match('attr|acl',builddir.meta['PKG']):
+      builddir.install_test.append("install-dev install-lib")
+      builddir.install_test.append("!INSTALL=")
+      builddir.make_files.append('include/buildmacros')
 
     if re.match('bzip2',builddir.meta['PKG']):
-      builddir.build_test.append("PREFIX=/usr")
-      builddir.install_test.append("PREFIX=/usr")
+      builddir.build_test.append("CFLAGS=$CFLAGS")
+      builddir.install_test.append("PREFIX=$ROOT/usr LDFLAGS=$LDFLAGS")
 
     if re.match('git',builddir.meta['PKG']):
       builddir.build_test.append("prefix=/usr")
@@ -258,6 +265,8 @@ class BuildDir:
         test_script = "%s/setup.py"%(self.nn_root,)
         if os.path.isfile(test_script):
           self.pkg = PythonPackage("setup.py")
+        else:
+          self.pkg = Package("unknown",None)
 
   def get_root(self):
     return self.nn_root
