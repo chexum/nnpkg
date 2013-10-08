@@ -68,6 +68,8 @@ vendors={
 	'time':'GNU',
 	'wdiff':'GNU',
 	'which':'GNU',
+	'acl':'SGI',
+	'attr':'SGI',
 
 	'binutils':'Cygnus',
 
