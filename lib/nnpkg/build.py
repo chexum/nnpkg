@@ -90,6 +90,9 @@ class Package(object):
       builddir.install_test.append("!INSTALL=")
       builddir.make_files.append('include/buildmacros')
 
+    if re.match('adns',builddir.meta['PKG']):
+      builddir.make_files.append('settings.make')
+
     if re.match('bzip2',builddir.meta['PKG']):
       builddir.build_test.append("CFLAGS=$CFLAGS")
       builddir.install_test.append("PREFIX=$ROOT/usr LDFLAGS=$LDFLAGS")
@@ -168,7 +171,7 @@ class AutoconfPackage(Package):
       builddir.env['LDFLAG_STATIC']=''
 
     if re.match('gnupg',builddir.meta['PKG']):
-      builddir.conf_test.append("--enable-gpgtar")
+      builddir.conf_test.append("--enable-gpgtar --libexecdir=/usr/lib/gnupg")
 
     if re.match('groff',builddir.meta['PKG']):
       builddir.conf_test.append("--with-appresdir=/etc/X11/app-defaults")
@@ -193,6 +196,11 @@ class AutoconfPackage(Package):
     if re.match('tar',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/etc")
       builddir.env['tar_cv_path_RSH']='/usr/bin/ssh'
+
+    if re.match('vim',builddir.meta['PKG']):
+      builddir.conf_test.append("--disable-selinux --enable-pythoninterp --enable-cscope --enable-multibyte --enable-gui=gtk2")
+      builddir.conf_files.append("src/auto/configure")
+#     builddir.conf_test.append("--disable-gui --without-x --disable-xim")
 
     if re.match('zsh',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-maildir-support --with-curses-terminfo --disable-gdbm")
