@@ -420,6 +420,12 @@ def pkgsplitname(fn):
 			pkg_canonical='sqlite'
 			pkgnam='sqlite3'
 
+	if pkgnam=='libusbx':
+		pkgnam='libusb'
+
+	if pkgnam in ['libusb','libusb-compat'] and ver[0]=='0':
+		pkgnam='libusb_compat'
+
 	if strvnd == 'X11':
 		pkgcat = 'X11'
 		pkgnam = 'X11_' + strpkg
@@ -501,6 +507,8 @@ def selftest():
 		'sqlite:-autoconf-:3070603::.tar.gz/sqlite3',
 		'gtk+:-:2.24.8::.tar.xz/gtk',
 		'json-c:-:0.9::.tar.gz/json',
+		'libusb-compat:-:0.1.5::.tar.bz2/libusb_compat',
+		'libusbx:-:1.0.17::.tar.bz2/libusb',
 		):
 		exp=''.join(test.split(':'))
 		w=exp.split('/')
