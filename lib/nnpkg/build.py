@@ -17,7 +17,10 @@ def confregex(opts):
         else:
           varopt=re.match("^\!?(.*?)\s*=\s*(.*)$",opt)
           if varopt: res.append(r'(\s*%s=[A-Z]+\s)'%(varopt.group(1),))
-          else: res.append('((?!x)x)')
+          else:
+            longopt=re.match("^\!?--([a-z0-9-]+)$",opt)
+            if longopt: res.append(r'(\s+--%s(\s|=))'%(longopt.group(1),))
+            else: res.append('((?!x)x)')
   return res
 
 def makeregex(targets):
@@ -135,6 +138,11 @@ class AutoconfPackage(Package):
   def setup(self,builddir):
     if self.conf_script:
       builddir.conf_files.append(self.conf_script)
+
+      # save help output for flag changes
+      help_option = grep_all(['--help'],[self.conf_script])
+      if len(help_option)>0:
+        builddir.command([os.path.join(self.conf_dir,self.conf_script),'--help'],[],'help')
 
     if re.match('bash',builddir.meta['PKG']):
       # flavour: --enable-minimal-config
