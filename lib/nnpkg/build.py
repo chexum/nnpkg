@@ -250,12 +250,7 @@ class BuildDir:
         if res:
           self.meta[res.group(1)]=res.group(2)
           print "meta",res.group(1),res.group(2)
-#meta:
-#PKG=sqlite
-#PKGNAM=sqlite3
-#PKGVER=3.8.2
-#PKGVND=
-#PKGCAT=
+#meta: PKG=sqlite PKGNAM=sqlite3 PKGVER=3.8.2 PKGVND= PKGCAT=
 
     if self.nn_root:
       test_script = "%s/configure"%(self.nn_root,)
@@ -297,7 +292,6 @@ class BuildDir:
 
     if log_proc: log_proc.stdin.write("! %s\n"%(" ".join([os.path.expandvars(c) for c in cmd]),))
     print "!"," ".join(cmd)
-
 
     try:
       cmd_proc = subprocess.Popen([os.path.expandvars(c) for c in cmd],stdout=subprocess.PIPE)
