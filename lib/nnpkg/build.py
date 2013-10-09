@@ -159,7 +159,7 @@ class JamPackage(Package):
     builddir.command(['./bjam','release','debug','threading=multi','toolset=gcc','--layout=tagged'],[],'build')
 
   def install(self,builddir):
-    builddir.command(['./bjam','install','--layout=tagged','--prefix=%s'%(builddir.get_destdir(),)],[],'install')
+    builddir.command(['./bjam','install','--layout=tagged','--prefix=$ROOT/usr',],["ROOT=%s"%(builddir.get_destdir(),)],'install')
 
 class AutoconfPackage(Package):
   """
@@ -331,7 +331,7 @@ class BuildDir:
           if os.path.isfile(test_script):
             self.pkg = PythonPackage("setup.py")
           else:
-            test_script = "%s/boost-build.jam"%(self.nn_root,)
+            test_script = "%s/Jamroot"%(self.nn_root,)
             if os.path.isfile(test_script):
               self.pkg = JamPackage("Jamroot")
             else:
