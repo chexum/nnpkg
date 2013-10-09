@@ -187,9 +187,20 @@ class AutoconfPackage(Package):
         conf_path = builddir.rel_to_use(self.conf_script)
         builddir.command([conf_path,'--help'],[],'help')
 
+    if re.match('apr|apr-util',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-installbuilddir=/usr/share/apr-1/build --with-crypto")
+
     if re.match('bash',builddir.meta['PKG']):
       ## flavour minimal vs none
       builddir.conf_test.append("--with-installed-readline --with-curses")
+
+    if re.match('db',builddir.meta['PKG']):
+      builddir.use_dir('BUILD')
+      builddir.conf_test.append("--enable-tcl --enable-cxx --enable-compat185 --enable-java --with-tcl=/usr/lib")
+      builddir.install_test.append("docdir=/usr/share/doc/db")
+
+    if re.match('tcl|tk',builddir.meta['PKG']):
+      builddir.use_dir('BUILD')
 
     if re.match('e2fsprogs',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-dynamic-e2fsck --enable-fsck --enable-blkid-devmapper --enable-elf-shlibs")
@@ -206,12 +217,44 @@ class AutoconfPackage(Package):
       ## flavour i386 vs i686
       builddir.conf_test.append("--build=i386-pc-linux-gnu")
 
-
     if re.match('gnupg',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-gpgtar --libexecdir=/usr/lib/gnupg")
 
     if re.match('groff',builddir.meta['PKG']):
       builddir.conf_test.append("--with-appresdir=/etc/X11/app-defaults")
+
+    if re.match('httpd',builddir.meta['PKG']):
+      builddir.conf_test.append("--enable-layout=RedHat --exec-prefix=/usr --libexecdir=/usr/lib/apache/so")
+      builddir.conf_test.append("--sysconfdir=/etc/apache --mandir=/usr/share/man/apache --datadir=/usr/share/apache")
+      builddir.conf_test.append("--enable-so --enable-ssl --enable-mods-shared=all")
+      builddir.conf_test.append("--enable-deflate --enable-proxy")
+      builddir.conf_test.append("--with-ldap --enable-authnz-ldap --enable-ldap --enable-dbd --enable-authn-dbd")
+      builddir.conf_test.append("--enable-authz-dbm --enable-authn-dbm")
+      builddir.conf_test.append("--enable-cache --enable-file_cache --enable-disk_cache --enable-mem_cache")
+      builddir.conf_test.append("--enable-charset_lite")
+      builddir.conf_test.append("--enable-authn-dbm --enable-authz-dbm --with-berkeley-db --with-dbm=db")
+      builddir.conf_test.append("--with-pcre --with-devrandom --with-mpm=prefork --with-included-apr")
+      # perl -pi.bak -e 's,(log|cache)/httpd,$1/apache,g;s,logs/(apache|error),log/$1,g;' config.status build/*mk include/*h
+
+    if re.match('LVM2',builddir.meta['PKG']):
+      builddir.conf_test.append("--sbindir=/sbin --libdir=/lib --exec-prefix= --enable-static_link")
+      builddir.make_files.append('make.tmpl')
+
+    if re.match('lzip',builddir.meta['PKG']):
+      builddir.conf_test.append("CXXFLAGS=$CXXFLAGS")
+      builddir.conf_test.append("LDFLAGS=$LDFLAGS")
+
+    if re.match('openldap',builddir.meta['PKG']):
+      builddir.conf_test.append("--libexecdir=/usr/sbin --localstatedir=/var/lib/openldap-data")
+      builddir.conf_test.append("--enable-ipv6 --enable-rewrite --enable-bdb --enable-hdb --enable-meta --enable-ldap --enable-overlays")
+      builddir.conf_test.append("--without-cyrus-sasl --disable-spasswd --disable-perl")
+
+    if re.match('pcre',builddir.meta['PKG']):
+      builddir.conf_test.append("--enable-utf8 --enable-unicode-properties --enable-pcre16 --enable-jit")
+      builddir.conf_test.append("--enable-pcregrep-libz --enable-pcregrep-libbz2")
+
+    if re.match('tar',builddir.meta['PKG']):
+      builddir.conf_test.append("--libexecdir=/etc")
 
     if re.match('LVM2',builddir.meta['PKG']):
       builddir.conf_test.append("--sbindir=/sbin --libdir=/lib --exec-prefix= --enable-static_link")

@@ -250,6 +250,10 @@ vendors={
 	'ldns':'nlnetlabs',
 	'nsd':'nlnetlabs',
 	'unbound':'nlnetlabs',
+
+	'httpd':'Apache',
+	'apr':'Apache',
+	'apr-util':'Apache',
 }
 
 def pkgsplitname(fn):
