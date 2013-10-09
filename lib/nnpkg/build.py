@@ -185,7 +185,7 @@ class AutoconfPackage(Package):
       help_option = grep_all(['--help'],[self.conf_script])
       if len(help_option)>0:
         conf_path = builddir.rel_to_use(self.conf_script)
-        builddir.command([conf_path,'--help'],[],'help')
+        builddir.command(['sh',conf_path,'--help'],[],'help')
 
     if re.match('apr|apr-util',builddir.meta['PKG']):
       builddir.conf_test.append("--with-installbuilddir=/usr/share/apr-1/build --with-crypto")
@@ -290,7 +290,7 @@ class AutoconfPackage(Package):
     for v in sorted(builddir.env.iterkeys()):
       env.append("%s=%s"%(v,builddir.env[v]))
 
-    cmdline=[builddir.rel_to_use(self.conf_script)]
+    cmdline=['sh',builddir.rel_to_use(self.conf_script)]
     possible_opts=shlex.split(" ".join(builddir.conf_test))
     cmdline.extend(grep_all(possible_opts,builddir.conf_files))
     builddir.command(cmdline,env,'setup')
