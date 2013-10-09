@@ -265,6 +265,8 @@ class BuildDir:
   def __init__(self,start_dir=None):
     self.debug=False;
     self.nn_root = None
+    self.cwd = None
+    self.cwd_use = None
     self.meta={}
     self.conf_test=["--prefix=/usr --sysconfdir=/etc --libexecdir=/usr/lib --localstatedir=/var --enable-shared"]
     self.cmake_test=["-DCMAKE_INSTALL_PREFIX=/usr"]
@@ -336,6 +338,9 @@ class BuildDir:
     else:
       self.pkg = Package("Unknown",None)
 
+    os.chdir(self.nn_root)
+    self.cwd = self.nn_root
+
   def get_root_path(self):
     return self.nn_root
 
@@ -344,6 +349,13 @@ class BuildDir:
 
   def check_file(self,fn):
     return os.path.isfile(os.path.join(self.nn_root,fn))
+
+  def get_rel_path(self,fn="."):
+    rel_path = os.path.relpath(fn)
+    if "/" in rel_path or "." == rel_path:
+      return rel_path
+    else:
+      return os.path.join('.',rel_path)
 
   def set_debug(self,debug):
     self.debug=debug
@@ -367,6 +379,18 @@ class BuildDir:
           if log_proc: log_proc.stdin.write("! export %s\n"%(v,))
           print "! export",v
 
+    os.chdir(self.cwd)
+    if self.cwd_use:
+      if not os.path.exists(self.cwd_use):
+        os.mkdir(self.cwd_use)
+        if log_proc: log_proc.stdin.write("! mkdir %s\n"%(self.get_rel_path(self.cwd_use),))
+        print "! mkdir %s"%(self.cwd_use,)
+      if log_proc: log_proc.stdin.write("! cd %s\n"%(self.get_rel_path(self.cwd_use),))
+      print "! cd %s"%(self.cwd_use,)
+      os.chdir(self.cwd_use)
+      self.cwd = os.getcwd()
+      self.cwd_use = None
+
     if log_proc: log_proc.stdin.write("! %s\n"%(" ".join([os.path.expandvars(c) for c in cmd]),))
     print "!"," ".join(cmd)
 
@@ -386,6 +410,8 @@ class BuildDir:
     if cmd_proc: cmd_proc.wait()
     if cmd_proc.returncode:
       sys.exit(1)
+
+    os.chdir(self.nn_root)
     return cmd_proc.returncode
 
   def setup(self):
