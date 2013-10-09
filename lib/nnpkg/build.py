@@ -318,30 +318,32 @@ class BuildDir:
       sys.exit(1)
 #meta: PKG=sqlite PKGNAM=sqlite3 PKGVER=3.8.2 PKGVND= PKGCAT=
 
-    if self.nn_root:
-      test_script= "%s/CMakeLists.txt"%(self.nn_root,)
-      if os.path.isfile(test_script):
-        self.pkg = CmakePackage("CMakeListst.txt")
-      else:
-        test_script = "%s/configure"%(self.nn_root,)
-        if os.path.isfile(test_script):
-          self.pkg = AutoconfPackage("configure")
-        else:
-          test_script = "%s/setup.py"%(self.nn_root,)
-          if os.path.isfile(test_script):
-            self.pkg = PythonPackage("setup.py")
-          else:
-            test_script = "%s/Jamroot"%(self.nn_root,)
-            if os.path.isfile(test_script):
-              self.pkg = JamPackage("Jamroot")
-            else:
-              self.pkg = Package("unknown",None)
+    if self.check_file('CMakeLists.txt'):
+      self.pkg = CmakePackage("CMakeListst.txt")
+    # everything GNU
+    elif self.check_file('configure'):
+      self.pkg = AutoconfPackage('./configure')
+    # Berkeley db
+    elif self.check_file('dist/configure'):
+      self.pkg = AutoconfPackage('dist/configure')
+    # tcl/tk
+    elif self.check_file('unix/configure'):
+      self.pkg = AutoconfPackage('unix/configure')
+    elif self.check_file('setup.py'):
+      self.pkg = PythonPackage('setup.py')
+    elif self.check_file('Jamroot'):
+      self.pkg = PythonPackage('Jamroot')
+    else:
+      self.pkg = Package("Unknown",None)
 
   def get_root(self):
     return self.nn_root
 
   def get_destdir(self):
     return os.path.join(self.nn_root,'ROOT')
+
+  def check_file(self,fn):
+    return os.path.isfile(os.path.join(self.nn_root,fn))
 
   def set_debug(self,debug):
     self.debug=debug
