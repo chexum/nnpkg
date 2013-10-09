@@ -45,7 +45,7 @@ def grep_all(tosearch,files,where=None):
 
   for fn in files:
     try:
-#     print "LOOK","|".join(look)
+#     print "LOOK","|".join(look),fn
       with open(fn) as f:
         for l in f:
           res = re_compiled.search(l)
