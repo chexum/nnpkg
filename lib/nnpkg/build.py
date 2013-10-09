@@ -358,11 +358,6 @@ class BuildDir:
   def check_file(self,fn):
     return os.path.isfile(os.path.join(self.nn_root,fn))
 
-  def get_rel_path(self,fn="."):
-    rel_path = os.path.relpath(fn)
-    if "/" in rel_path or "." == rel_path:
-      return rel_path
-
   # dir to use for command()
   def use_dir(self,path):
     self.cwd_use = path
@@ -403,11 +398,12 @@ class BuildDir:
 
     os.chdir(self.cwd)
     if self.cwd_use:
+      rel_dir = os.path.relpath(self.cwd_use,self.cwd)
       if not os.path.exists(self.cwd_use):
         os.mkdir(self.cwd_use)
-        if log_proc: log_proc.stdin.write("! mkdir %s\n"%(self.get_rel_path(self.cwd_use),))
+        if log_proc: log_proc.stdin.write("! mkdir %s\n"%(rel_dir,))
         print "! mkdir %s"%(self.cwd_use,)
-      if log_proc: log_proc.stdin.write("! cd %s\n"%(self.get_rel_path(self.cwd_use),))
+      if log_proc: log_proc.stdin.write("! cd %s\n"%(rel_dir,))
       print "! cd %s"%(self.cwd_use,)
       os.chdir(self.cwd_use)
       self.cwd = os.getcwd()
