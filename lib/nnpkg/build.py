@@ -10,8 +10,8 @@ def confregex(opts):
       enopt=re.match("^\!?--(en|dis)able-(.*)($|=)",opt)
       if enopt: res.append(r'(\s*--(en|dis)able-%s(\s|\[|=))'%(enopt.group(2),))
       else:
-        wopt = re.match("^\!?--with(|out)-(.*)$",opt)
-        if wopt: res.append(r'(\s*--with(|out)-%s\s)'%(wopt.group(2),))
+        wopt = re.match("^\!?--with(|out)-([a-z0-9-]+).*",opt)
+        if wopt: res.append(r'(\s*--with(|out)-%s(\s|=))'%(wopt.group(2),))
         else:
           varopt=re.match("^\!?(.*?)\s*=\s*(.*)$",opt)
           if varopt: res.append(r'(\s*%s=[A-Z]+\s)'%(varopt.group(1),))
