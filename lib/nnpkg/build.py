@@ -201,6 +201,8 @@ class AutoconfPackage(Package):
 
     if re.match('tcl|tk',builddir.meta['PKG']):
       builddir.use_dir('BUILD')
+      builddir.conf_test.append("--without-tzdata")
+      builddir.install_test.append("install-private-headers")
 
     if re.match('e2fsprogs',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-dynamic-e2fsck --enable-fsck --enable-blkid-devmapper --enable-elf-shlibs")
