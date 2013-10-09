@@ -349,8 +349,9 @@ class BuildDir:
     self.debug=debug
 
   def command(self,cmd,vars=None,logto=None):
+    os.chdir(self.nn_root)
     if self.do_multilog and logto and not self.debug:
-      logdir = os.path.join(self.nn_root,'.nnpkg',logto)
+      logdir = os.path.join('.nnpkg',logto)
       try: os.mkdir(logdir)
       except: pass
       log_proc = subprocess.Popen(['multilog','t','s999999','n25',logdir],stdin=subprocess.PIPE)
