@@ -336,7 +336,7 @@ class BuildDir:
     else:
       self.pkg = Package("Unknown",None)
 
-  def get_root(self):
+  def get_root_path(self):
     return self.nn_root
 
   def get_destdir(self):
