@@ -29,13 +29,20 @@ def makeregex(targets):
     else: res.append(r'((^|[^#:]+\s)%s(:|\s+[^#:]*:))'%(t,))
   return res
 
-def grep_all(tosearch,files):
+def grep_all(tosearch,files,where=None):
   xfound={}
   if re.match("(^|.*/|.*\.)([Mm]ake.*)",files[0]):
     look=makeregex(tosearch)
   else:
     look=confregex(tosearch)
   re_compiled = re.compile("|".join(look))
+
+  if where:
+    oldcwd = os.getcwd()
+    os.chdir(where)
+  else:
+    oldcwd = None
+
   for fn in files:
     try:
 #     print "LOOK","|".join(look)
@@ -57,6 +64,7 @@ def grep_all(tosearch,files):
         res.append(xfound[opt_re])
       del xfound[opt_re]
 
+  if oldcwd: os.chdir(oldcwd)
   return res
 
 def isinpath(exe):
@@ -75,7 +83,6 @@ class Package(object):
   """
   def __init__(self,type,script,dir="."):
     self.conf_script=script
-    self.conf_dir=dir
     self.conf_type=type
 
   def setup(self,builddir):
@@ -108,7 +115,7 @@ class Package(object):
 
     cmdline=["make"]
     possible_targets=shlex.split(" ".join(builddir.build_test))
-    cmdline.extend(grep_all(possible_targets,builddir.make_files))
+    cmdline.extend(grep_all(possible_targets,builddir.make_files,builddir.get_use_dir()))
     builddir.command(cmdline,[],'build')
 
   def install(self,builddir):
@@ -122,7 +129,7 @@ class Package(object):
     cmdline.extend(["make","DESTDIR=$ROOT"])
 
     possible_targets=shlex.split(" ".join(builddir.install_test))
-    cmdline.extend(grep_all(possible_targets,builddir.make_files))
+    cmdline.extend(grep_all(possible_targets,builddir.make_files,builddir.get_use_dir()))
     builddir.command(cmdline,["ROOT=%s"%(builddir.get_destdir())],'install')
 
 class CmakePackage(Package):
@@ -177,7 +184,8 @@ class AutoconfPackage(Package):
       # save help output for flag changes
       help_option = grep_all(['--help'],[self.conf_script])
       if len(help_option)>0:
-        builddir.command([os.path.join(self.conf_dir,self.conf_script),'--help'],[],'help')
+        conf_path = builddir.rel_to_use(self.conf_script)
+        builddir.command([conf_path,'--help'],[],'help')
 
     if re.match('bash',builddir.meta['PKG']):
       ## flavour minimal vs none
@@ -238,8 +246,9 @@ class AutoconfPackage(Package):
     env=[]
     for v in sorted(builddir.env.iterkeys()):
       env.append("%s=%s"%(v,builddir.env[v]))
+
+    cmdline=[builddir.rel_to_use(self.conf_script)]
     possible_opts=shlex.split(" ".join(builddir.conf_test))
-    cmdline=[os.path.join(self.conf_dir,self.conf_script)]
     cmdline.extend(grep_all(possible_opts,builddir.conf_files))
     builddir.command(cmdline,env,'setup')
 
@@ -285,7 +294,6 @@ class BuildDir:
 
     self.conf_script=None
     self.conf_file=None
-    self.conf_dir="."
     self.conf_type=None
     self.conf_opts=[]
     self.pkg = None
@@ -354,8 +362,22 @@ class BuildDir:
     rel_path = os.path.relpath(fn)
     if "/" in rel_path or "." == rel_path:
       return rel_path
+
+  # dir to use for command()
+  def use_dir(self,path):
+    self.cwd_use = path
+
+  def get_use_dir(self):
+    if self.cwd_use:
+      return os.path.relpath(self.cwd_use,self.nn_root)
     else:
-      return os.path.join('.',rel_path)
+      return os.path.relpath(self.cwd,self.nn_root)
+
+  # relative path, relative to the "use" above (or the cwd if already used)
+  def rel_to_use(self,path):
+    if self.cwd_use:
+      return os.path.relpath(path,os.path.join(self.nn_root,self.cwd_use))
+    return os.path.relpath(path,os.path.join(self.nn_root,self.cwd))
 
   def set_debug(self,debug):
     self.debug=debug
