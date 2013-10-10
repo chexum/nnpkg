@@ -101,20 +101,20 @@ class Package(object):
       builddir.make_files.append('settings.make')
 
     if re.match('bzip2',builddir.meta['PKG']):
-      builddir.build_test.append("CFLAGS=$CFLAGS")
+      builddir.make_test.append("CFLAGS=$CFLAGS")
       builddir.install_test.append("PREFIX=$ROOT/usr LDFLAGS=$LDFLAGS")
 
     if re.match('git',builddir.meta['PKG']):
-      builddir.build_test.append("prefix=/usr")
-      builddir.build_test.append("CFLAGS=$CFLAGS")
+      builddir.make_test.append("prefix=/usr")
+      builddir.make_test.append("CFLAGS=$CFLAGS")
       builddir.install_test.append("prefix=/usr")
       builddir.install_test.append("CFLAGS=$CFLAGS")
 
     if re.match('openldap',builddir.meta['PKG']):
-      builddir.build_test = ["depend all"]
+      builddir.make_test = ["depend all"]
 
     cmdline=["make"]
-    possible_targets=shlex.split(" ".join(builddir.build_test))
+    possible_targets=shlex.split(" ".join(builddir.make_test))
     cmdline.extend(grep_all(possible_targets,builddir.make_files,builddir.get_use_dir()))
     builddir.command(cmdline,[],'build')
 
@@ -323,8 +323,8 @@ class BuildDir:
     self.cwd_use = None
     self.meta={}
     self.conf_test=["--prefix=/usr --sysconfdir=/etc --libexecdir=/usr/lib --localstatedir=/var --enable-shared"]
+    self.make_test=["all"]
     self.cmake_test=["-DCMAKE_INSTALL_PREFIX=/usr"]
-    self.build_test=["all"]
     self.install_test=["install","INSTALL=install"]
     self.env={}
     self.env['CC']="gcc"
