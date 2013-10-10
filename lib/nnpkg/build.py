@@ -328,6 +328,9 @@ class SconsPackage(Package):
     builddir.command(['scons','--help'],[],'help')
 
   def build(self,builddir):
+    if re.match('serf',builddir.meta['PKG']):
+      builddir.scons_test.append("APR=/usr APU=/usr OPENSSL=/usr CFLAGS=$CFLAGS LINKFLAGS=$LDFLAGS")
+
     cmd=['scons']
     cmd.extend(shlex.split(" ".join(builddir.scons_test)))
     builddir.command(cmd,[],'build')
