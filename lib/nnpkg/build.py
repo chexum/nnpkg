@@ -143,7 +143,7 @@ class CmakePackage(Package):
 
   def setup(self,builddir):
     cmd=['cmake']
-    cmd.extend(builddir.cmake_test)
+    cmd.extend(shlex.split(" ".join(builddir.cmake_test)))
     cmd.extend(".")
     builddir.command(cmd,[],'build')
 
