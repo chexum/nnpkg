@@ -7,7 +7,7 @@ def confregex(opts):
     diropt=re.match("^\!?(.*)=(/.*)$",opt)
     if diropt: res.append(r'(\s*%s=[A-Z]+\s)'%(diropt.group(1),))
     else:
-      enopt=re.match("^\!?--(en|dis)able-(.*)($|=)",opt)
+      enopt=re.match("^\!?--(en|dis)able-(.*?)($|=)",opt)
       if enopt: res.append(r'(\s*--(en|dis)able-%s(\s|\[|=))'%(enopt.group(2),))
       else:
         wopt = re.match("^\!?--with(|out)-([a-z0-9-]+).*",opt)
