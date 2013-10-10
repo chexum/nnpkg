@@ -315,6 +315,26 @@ class PythonPackage(Package):
   def install(self,builddir):
     builddir.command(['python',self.conf_script,'install','--root',builddir.get_destdir()],[],'install')
 
+class SconsPackage(Package):
+  """
+  ************************************************
+  How to setup build/install a SConstruct package.
+  ************************************************
+  """
+  def __init__(self,script,dir="."):
+    Package.__init__(self,'scons',script,dir)
+
+  def setup(self,builddir):
+    builddir.command(['scons','--help'],[],'help')
+
+  def build(self,builddir):
+    cmd=['scons']
+    cmd.extend(shlex.split(" ".join(builddir.scons_test)))
+    builddir.command(cmd,[],'build')
+
+  def install(self,builddir):
+    builddir.command(['scons','PREFIX=$ROOT/usr','install'],["ROOT=%s"%(builddir.get_destdir(),)],'install')
+
 class BuildDir:
   def __init__(self,start_dir=None):
     self.debug=False;
@@ -324,6 +344,7 @@ class BuildDir:
     self.meta={}
     self.conf_test=["--prefix=/usr --sysconfdir=/etc --libexecdir=/usr/lib --localstatedir=/var --enable-shared"]
     self.make_test=["all"]
+    self.scons_test=["PREFIX=/usr"]
     self.cmake_test=["-DCMAKE_INSTALL_PREFIX=/usr"]
     self.install_test=["install","INSTALL=install"]
     self.env={}
@@ -388,6 +409,8 @@ class BuildDir:
       self.pkg = PythonPackage('setup.py')
     elif self.check_file('Jamroot'):
       self.pkg = PythonPackage('Jamroot')
+    elif self.check_file('SConstruct'):
+      self.pkg = SconsPackage('SConstruct')
     else:
       self.pkg = Package("Unknown",None)
 
