@@ -187,8 +187,10 @@ class AutoconfPackage(Package):
         conf_path = builddir.rel_to_use(self.conf_script)
         builddir.command(['sh',conf_path,'--help'],[],'help')
 
-    if re.match('apr|apr-util',builddir.meta['PKG']):
-      builddir.conf_test.append("--with-installbuilddir=/usr/share/apr-1/build --with-crypto")
+    if re.match('apr',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-installbuilddir=/usr/share/apr-1/build")
+    if re.match('apr-util',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-crypto --with-apr=/usr --with-openssl=/usr --with-sqlite3=/usr --with-expat=/usr --with-berkeley-db=/usr")
 
     if re.match('bash',builddir.meta['PKG']):
       ## flavour minimal vs none
@@ -246,6 +248,9 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("CXXFLAGS=$CXXFLAGS")
       builddir.conf_test.append("LDFLAGS=$LDFLAGS")
 
+    if re.match('neon',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-ssl=openssl")
+
     if re.match('openldap',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/usr/sbin --localstatedir=/var/lib/openldap-data")
       builddir.conf_test.append("--enable-ipv6 --enable-rewrite --enable-bdb --enable-hdb --enable-meta --enable-ldap --enable-overlays")
@@ -254,6 +259,9 @@ class AutoconfPackage(Package):
     if re.match('pcre',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-utf8 --enable-unicode-properties --enable-pcre16 --enable-jit")
       builddir.conf_test.append("--enable-pcregrep-libz --enable-pcregrep-libbz2")
+
+    if re.match('subversion',builddir.meta['PKG']):
+      builddir.install_test.append("install-swig-rb install-swig-py install-swig-pl")
 
     if re.match('tar',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/etc")
@@ -274,6 +282,9 @@ class AutoconfPackage(Package):
     if re.match('pcre',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-utf8 --enable-unicode-properties --enable-pcre16 --enable-jit")
       builddir.conf_test.append("--enable-pcregrep-libz --enable-pcregrep-libbz2")
+
+    if re.match('ruby',builddir.meta['PKG']):
+      builddir.make_files.append("common.mk")
 
     if re.match('tar',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/etc")
