@@ -426,14 +426,21 @@ def pkgsplitname(fn):
 			pkg_canonical='sqlite'
 			pkgnam='sqlite3'
 
-	if pkgnam=='lvm2':
-		pkgnam='lvm'
+	if pkgnam=='lvm2': pkgnam='lvm'
 
-	if pkgnam=='libusbx':
-		pkgnam='libusb'
+	if pkgnam=='libusbx': pkgnam='libusb'
 
 	if pkgnam in ['libusb','libusb-compat'] and ver[0]=='0':
 		pkgnam='libusb_compat'
+
+	if pkgnam in ['db']: pkgnam='db%s'%(ver[0],)
+
+	if pkgnam in 'libsigc++': pkgnam='libsigcxx'
+
+	if pkgnam in ['pkg-config','pkgconfig']: pkgnam='pkgconfig'
+
+	if pkgnam in ['libpng']: pkgnam='libpng%s%s'%(ver[0],ver[2])
+
 
 	if strvnd == 'X11':
 		pkgcat = 'X11'
@@ -483,7 +490,7 @@ def selftest():
 		'libpng:-:1.2.41:-apng:.patch',
 		'gtk+:-:2.20.1::.sha256sum/gtk',
 		'libconic:_:0.24+0m5::.tar.gz',
-		'libsigc++:-:2.2.7::.tar.bz2',
+		'libsigc++:-:2.2.7::.tar.bz2/libsigcxx',
 		'openssl:-:1.0.0:+srp:-patch.txt',
 		'link-grammar:-:4.6.7::.tar.gz',
 		'moconti::102609::.tgz',
