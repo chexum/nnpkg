@@ -106,9 +106,8 @@ class Package(object):
 
     if re.match('git',builddir.meta['PKG']):
       builddir.make_test.append("prefix=/usr")
-      builddir.make_test.append("CFLAGS=$CFLAGS")
+      builddir.make_test.append("CFLAGS=$CFLAGS LDFLAGS=$LDFLAGS")
       builddir.install_test.append("prefix=/usr")
-      builddir.install_test.append("CFLAGS=$CFLAGS")
 
     if re.match('openldap',builddir.meta['PKG']):
       builddir.make_test = ["depend all"]
