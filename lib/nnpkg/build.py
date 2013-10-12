@@ -502,8 +502,8 @@ class BuildDir:
       while True:
         l = cmd_proc.stdout.readline()
         if log_proc: log_proc.stdin.write(l)
-        print l,
         if len(l)<=0: break
+        print l,
       if log_proc:
         log_proc.stdin.close()
     except KeyboardInterrupt:
