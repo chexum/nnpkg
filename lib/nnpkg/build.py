@@ -422,7 +422,7 @@ class BuildDir:
     elif self.check_file('setup.py'):
       self.pkg = PythonPackage('setup.py')
     elif self.check_file('Jamroot'):
-      self.pkg = PythonPackage('Jamroot')
+      self.pkg = JamPackage('Jamroot')
     elif self.check_file('SConstruct'):
       self.pkg = SconsPackage('SConstruct')
     else:
