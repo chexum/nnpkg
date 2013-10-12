@@ -188,8 +188,11 @@ class AutoconfPackage(Package):
 
     if re.match('apr',builddir.meta['PKG']):
       builddir.conf_test.append("--with-installbuilddir=/usr/share/apr-1/build")
+      builddir.env['CC']="gcc -std=gnu99"
     if re.match('apr-util',builddir.meta['PKG']):
-      builddir.conf_test.append("--with-crypto --with-apr=/usr --with-openssl=/usr --with-sqlite3=/usr --with-expat=/usr --with-berkeley-db=/usr")
+      builddir.conf_test.append("--with-apr=/usr --with-openssl=/usr --with-sqlite3=/usr --with-expat=/usr --with-berkeley-db=/usr")
+      builddir.conf_test.append("--with-crypto --with-ldap")
+      builddir.env['CC']="gcc -std=gnu99"
 
     if re.match('bash',builddir.meta['PKG']):
       ## flavour minimal vs none
@@ -231,13 +234,15 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--sysconfdir=/etc/apache --mandir=/usr/share/man/apache --datadir=/usr/share/apache")
       builddir.conf_test.append("--enable-so --enable-ssl --enable-mods-shared=all")
       builddir.conf_test.append("--enable-deflate --enable-proxy")
-      builddir.conf_test.append("--with-ldap --enable-authnz-ldap --enable-ldap --enable-dbd --enable-authn-dbd")
+      builddir.conf_test.append("--with-ldap --enable-authnz-ldap --enable-ldap")
+      builddir.conf_test.append("--enable-dbd --enable-authn-dbd")
       builddir.conf_test.append("--enable-authz-dbm --enable-authn-dbm")
       builddir.conf_test.append("--enable-cache --enable-file_cache --enable-disk_cache --enable-mem_cache")
       builddir.conf_test.append("--enable-charset_lite")
       builddir.conf_test.append("--enable-authn-dbm --enable-authz-dbm --with-berkeley-db --with-dbm=db")
-      builddir.conf_test.append("--with-pcre --with-devrandom --with-mpm=prefork --with-included-apr")
-      # perl -pi.bak -e 's,(log|cache)/httpd,$1/apache,g;s,logs/(apache|error),log/$1,g;' config.status build/*mk include/*h
+      builddir.conf_test.append("--with-pcre --with-devrandom --with-mpm=prefork")
+      builddir.make_files.append('build/rules.mk')
+      builddir.env['CC']="gcc -std=gnu99"
 
     if re.match('LVM2',builddir.meta['PKG']):
       builddir.conf_test.append("--sbindir=/sbin --libdir=/lib --exec-prefix= --enable-static_link")
@@ -261,6 +266,7 @@ class AutoconfPackage(Package):
 
     if re.match('subversion',builddir.meta['PKG']):
       builddir.install_test.append("install-swig-rb install-swig-py install-swig-pl")
+      builddir.env['CC']="gcc -std=gnu99"
 
     if re.match('tar',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/etc")
