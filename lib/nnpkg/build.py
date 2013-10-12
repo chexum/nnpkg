@@ -550,7 +550,9 @@ class BuildDir:
       sys.exit(1)
 
     os.chdir(self.nn_root)
-    return cmd_proc.returncode
+
+    # XXX flag done if necessary
+    return 0
 
   def setup(self):
     self.pkg.setup(self);
