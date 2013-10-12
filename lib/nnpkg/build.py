@@ -408,7 +408,7 @@ class BuildDir:
       sys.exit(1)
 #meta: PKG=sqlite PKGNAM=sqlite3 PKGVER=3.8.2 PKGVND= PKGCAT=
 
-    if self.check_file('CMakeLists.txt'):
+    if self.check_file('CMakeLists.txt') and self.meta['PKG'] not in ['curl','expat']:
       self.pkg = CmakePackage("CMakeListst.txt")
     # everything GNU
     elif self.check_file('configure'):
