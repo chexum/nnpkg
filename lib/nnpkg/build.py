@@ -201,6 +201,11 @@ class AutoconfPackage(Package):
     if re.match('cloog',builddir.meta['PKG']):
       builddir.conf_test.append("--with-isl=system")
 
+    if re.match('cups',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-cups-user=cups --with-cups-group=cups --disable-pam --disable-slp")
+      builddir.make_files.append('Makedefs')
+      builddir.install_test.append("BUILDROOT=$ROOT")
+
     if re.match('db',builddir.meta['PKG']):
       builddir.use_dir('BUILD')
       builddir.conf_test.append("--enable-tcl --enable-cxx --enable-compat185 --enable-java --with-tcl=/usr/lib")
@@ -220,6 +225,14 @@ class AutoconfPackage(Package):
       builddir.env['DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
       builddir.env['STATIC_DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
       builddir.env['LDFLAG_STATIC']=''
+
+    if re.match('freetype',builddir.meta['PKG']):
+      builddir.conf_files.append("builds/unix/configure")
+      builddir.install_files.append("builds/unix/install.mk")
+
+    if re.match('gamin',builddir.meta['PKG']):
+      builddir.conf_test.append("--libexecdir=/usr/sbin")
+      builddir.env['CFLAGS']="-Os -fomit-frame-pointer -fexceptions -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DG_CONST_RETURN=const"
 
     if re.match('gmp',builddir.meta['PKG']):
       builddir.env['CFLAGS']="-Os -fomit-frame-pointer -fexceptions -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
