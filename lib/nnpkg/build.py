@@ -454,6 +454,9 @@ class BuildDir:
     # tcl/tk
     elif self.check_file('unix/configure'):
       self.pkg = AutoconfPackage('unix/configure')
+    # ICU4C
+    elif self.check_file('source/configure'):
+      self.pkg = AutoconfPackage('source/configure')
     elif self.check_file('setup.py'):
       self.pkg = PythonPackage('setup.py')
     elif self.check_file('Jamroot'):
