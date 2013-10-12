@@ -305,6 +305,8 @@ class AutoconfPackage(Package):
 
     cmdline=['sh',builddir.rel_to_use(self.conf_script)]
     possible_opts=shlex.split(" ".join(builddir.conf_test))
+    fixed_opts=shlex.split(" ".join(builddir.conf_add))
+    cmdline.extend(fixed_opts)
     cmdline.extend(grep_all(possible_opts,builddir.conf_files))
     builddir.command(cmdline,env,'setup')
 
@@ -357,6 +359,7 @@ class BuildDir:
     self.cwd_use = None
     self.meta={}
     self.conf_test=["--prefix=/usr --sysconfdir=/etc --libexecdir=/usr/lib --localstatedir=/var --enable-shared"]
+    self.conf_add=[]
     self.make_test=["all"]
     self.scons_test=["PREFIX=/usr"]
     self.cmake_test=["-DCMAKE_INSTALL_PREFIX=/usr"]
