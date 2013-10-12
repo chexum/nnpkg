@@ -198,11 +198,20 @@ class AutoconfPackage(Package):
       ## flavour minimal vs none
       builddir.conf_test.append("--with-installed-readline --with-curses")
 
+    if re.match('cloog',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-isl=system")
+
     if re.match('db',builddir.meta['PKG']):
       builddir.use_dir('BUILD')
       builddir.conf_test.append("--enable-tcl --enable-cxx --enable-compat185 --enable-java --with-tcl=/usr/lib")
       builddir.install_test.append("docdir=/usr/share/doc/db")
 
+    if builddir.meta['PKG'] in 'doxygen':
+      builddir.conf_add.append("--prefix /usr --docdir /usr/share/doc")
+      builddir.make_files.append("src/Makefile.libdoxycfg")
+      builddir.env['CFLAGS']="-Os -fno-asynchronous-unwind-tables -fomit-frame-pointer -fno-exceptions -fno-rtti -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+      builddir.make_test.append("CFLAGS=$CFLAGS CXXFLAGS=$CFLAGS")
+      builddir.install_test.append("!INSTALL=/usr")
 
     if re.match('e2fsprogs',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-dynamic-e2fsck --enable-fsck --enable-blkid-devmapper --enable-elf-shlibs")
@@ -222,6 +231,9 @@ class AutoconfPackage(Package):
     if re.match('gnupg',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-gpgtar --libexecdir=/usr/lib/gnupg")
 
+    if re.match('gnutls',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-lzo")
+
     if re.match('groff',builddir.meta['PKG']):
       builddir.conf_test.append("--with-appresdir=/etc/X11/app-defaults")
 
@@ -239,6 +251,12 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--with-pcre --with-devrandom --with-mpm=prefork")
       builddir.make_files.append('build/rules.mk')
       builddir.env['CC']="gcc -std=gnu99"
+
+    if re.match('icu4c',builddir.meta['PKG']):
+      builddir.use_dir('BUILD')
+
+    if re.match('libxml2',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-icu")
 
     if re.match('LVM2',builddir.meta['PKG']):
       builddir.conf_test.append("--sbindir=/sbin --libdir=/lib --exec-prefix= --enable-static_link")
@@ -275,10 +293,18 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("CXXFLAGS=$CXXFLAGS")
       builddir.conf_test.append("LDFLAGS=$LDFLAGS")
 
+    if re.match('mpfr',builddir.meta['PKG']):
+      builddir.env['CFLAGS']="-Os -fomit-frame-pointer -fexceptions -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+      builddir.env['CXXFLAGS']="-Os -fomit-frame-pointer -fexceptions -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+      builddir.conf_test.append("--build=i386-pc-linux-gnu")
+
     if re.match('openldap',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/usr/sbin --localstatedir=/var/lib/openldap-data")
       builddir.conf_test.append("--enable-ipv6 --enable-rewrite --enable-bdb --enable-hdb --enable-meta --enable-ldap --enable-overlays")
       builddir.conf_test.append("--without-cyrus-sasl --disable-spasswd --disable-perl")
+
+    if builddir.meta['PKG'] in 'p11-kit':
+      builddir.conf_test.append("--without-trust-paths")
 
     if re.match('pcre',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-utf8 --enable-unicode-properties --enable-pcre16 --enable-jit")
