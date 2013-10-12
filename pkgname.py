@@ -254,6 +254,8 @@ vendors={
 	'httpd':'Apache',
 	'apr':'Apache',
 	'apr-util':'Apache',
+
+	'db':'Berkeley', # Oracle...
 }
 
 def pkgsplitname(fn):
