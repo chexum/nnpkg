@@ -203,10 +203,6 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--enable-tcl --enable-cxx --enable-compat185 --enable-java --with-tcl=/usr/lib")
       builddir.install_test.append("docdir=/usr/share/doc/db")
 
-    if re.match('tcl|tk',builddir.meta['PKG']):
-      builddir.use_dir('BUILD')
-      builddir.conf_test.append("--without-tzdata")
-      builddir.install_test.append("install-private-headers")
 
     if re.match('e2fsprogs',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-dynamic-e2fsck --enable-fsck --enable-blkid-devmapper --enable-elf-shlibs")
@@ -294,6 +290,11 @@ class AutoconfPackage(Package):
     if re.match('tar',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/etc")
       builddir.env['tar_cv_path_RSH']='/usr/bin/ssh'
+
+    if re.match('tcl|tk',builddir.meta['PKG']):
+      builddir.use_dir('BUILD')
+      builddir.conf_test.append("--without-tzdata")
+      builddir.install_test.append("install-private-headers")
 
     if re.match('vim',builddir.meta['PKG']):
       builddir.conf_test.append("--disable-selinux --enable-pythoninterp --enable-cscope --enable-multibyte --enable-gui=gtk2")
