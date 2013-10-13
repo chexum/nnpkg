@@ -228,7 +228,7 @@ class AutoconfPackage(Package):
 
     if re.match('freetype',builddir.meta['PKG']):
       builddir.conf_files.append("builds/unix/configure")
-      builddir.install_files.append("builds/unix/install.mk")
+      builddir.make_files.append("builds/unix/install.mk")
 
     if re.match('gamin',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/usr/sbin")
