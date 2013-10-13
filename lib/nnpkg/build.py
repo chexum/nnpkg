@@ -186,6 +186,11 @@ class AutoconfPackage(Package):
         conf_path = builddir.rel_to_use(self.conf_script)
         builddir.command(['sh',conf_path,'--help'],[],'help')
 
+    # set defaults for X packages
+    if builddir.meta['PKGVND'] in ['X11']:
+      builddir.conf_test.append("--libexecdir=/usr/X11/lib --bindir=/usr/X11/bin --libdir=/usr/X11/lib")
+      builddir.conf_test.append("--sysconfdir=/etc/X11 --mandir=/usr/X11/man --includedir=/usr/X11/include")
+
     if re.match('apr',builddir.meta['PKG']):
       builddir.conf_test.append("--with-installbuilddir=/usr/share/apr-1/build")
       builddir.env['CC']="gcc -std=gnu99"
