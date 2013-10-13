@@ -24,7 +24,9 @@ build_dir = build.BuildDir(os.environ.get('NNPKG_ROOT',None))
 #PKGCAT=
 
 # args: zxvf/extract setup build install walk/package
-# TODO: log each
+# TODO: cross
+# /x/i386/native
+# /x/i686/mipsel/usr/include
 
 DEBUG=False
 build_dir.set_debug(DEBUG)
