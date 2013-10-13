@@ -203,6 +203,9 @@ class AutoconfPackage(Package):
       ## flavour minimal vs none
       builddir.conf_test.append("--with-installed-readline --with-curses")
 
+    if builddir.meta['PKG'] in 'cairo':
+      builddir.conf_test.append("--enable-gl --enable-drm --enable-xlib-xcb")
+
     if re.match('cloog',builddir.meta['PKG']):
       builddir.conf_test.append("--with-isl=system")
 
