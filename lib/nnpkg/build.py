@@ -199,6 +199,13 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--with-crypto --with-ldap")
       builddir.env['CC']="gcc -std=gnu99"
 
+    if re.match('avahi',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-distro=gentoo --enable-core-docs --enable-compat-libdns_sd --enable-compat-howl")
+      builddir.conf_test.append("--disable-mono --disable-gtk3")
+      builddir.conf_test.append("--with-autoipd-user=autoipd --with-autoipd-group=autoupd")
+    if re.match('pulseaudio',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-access-group=pulseacc --enable-lirc --enable-udev --with-fftw --disable-tcpwrap")
+
     if re.match('bash',builddir.meta['PKG']):
       ## flavour minimal vs none
       builddir.conf_test.append("--with-installed-readline --with-curses")
@@ -233,6 +240,15 @@ class AutoconfPackage(Package):
       builddir.env['DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
       builddir.env['STATIC_DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
       builddir.env['LDFLAG_STATIC']=''
+
+    if re.match('faac',builddir.meta['PKG']):
+      builddir.conf_test.append("--enable-drm")
+
+    if re.match('ffmpeg',builddir.meta['PKG']):
+      builddir.conf_test.append("--enable-version3 --enable-gpl --enable-nonfree --enable-swscale --enable-postproc --disable-debug")
+      builddir.conf_test.append("--enable-libfaac --enable-libmp3lame")
+      builddir.conf_test.append("--enable-libx264 --enable-libvpx")
+      builddir.conf_test.append("--enable-libx264 --enable-libxvid")
 
     if re.match('freetype',builddir.meta['PKG']):
       builddir.conf_files.append("builds/unix/configure")
@@ -275,6 +291,10 @@ class AutoconfPackage(Package):
 
     if re.match('icu4c',builddir.meta['PKG']):
       builddir.use_dir('BUILD')
+
+    if re.match('libvpx',builddir.meta['PKG']):
+      builddir.conf_add.append("--prefix=/usr")
+      builddir.conf_script="./configure"
 
     if re.match('libxml2',builddir.meta['PKG']):
       builddir.conf_test.append("--with-icu")
@@ -334,6 +354,9 @@ class AutoconfPackage(Package):
     if re.match('ruby',builddir.meta['PKG']):
       builddir.make_files.append("common.mk")
 
+    if builddir.meta['PKG'] == 'rrdtool':
+      builddir.conf_test.append("--disable-perl --disable-lua")
+
     if re.match('tar',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/etc")
       builddir.env['tar_cv_path_RSH']='/usr/bin/ssh'
@@ -348,6 +371,9 @@ class AutoconfPackage(Package):
       builddir.conf_files.append("src/auto/configure")
       ## flavour nogui (vs gtk2)
 #     builddir.conf_test.append("--disable-gui --without-x --disable-xim")
+
+    if re.match('xvidcore',builddir.meta['PKG']):
+      builddir.use_dir("build/generic")
 
     if re.match('zsh',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-maildir-support --with-curses-terminfo --disable-gdbm")
@@ -476,6 +502,8 @@ class BuildDir:
     # ICU4C
     elif self.check_file('source/configure'):
       self.pkg = AutoconfPackage('source/configure')
+    elif self.check_file('build/generic/configure'):
+      self.pkg = AutoconfPackage('build/generic/configure')
     elif self.check_file('setup.py'):
       self.pkg = PythonPackage('setup.py')
     elif self.check_file('Jamroot'):
