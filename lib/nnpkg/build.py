@@ -424,7 +424,7 @@ class BuildDir:
     self.env['CXXFLAGS']="-Os -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
     self.env['LDFLAGS']="-s -Wl,--as-needed"
     self.conf_files=[]
-    self.make_files=['Makefile',]
+    self.make_files=['Makefile','GNUmakefile',]
 
     self.exec_env={}
 
