@@ -203,7 +203,7 @@ class AutoconfPackage(Package):
       ## flavour minimal vs none
       builddir.conf_test.append("--with-installed-readline --with-curses")
 
-    if builddir.meta['PKG'] in 'cairo':
+    if builddir.meta['PKG'] == 'cairo':
       builddir.conf_test.append("--enable-gl --enable-drm --enable-xlib-xcb")
 
     if re.match('cloog',builddir.meta['PKG']):
@@ -219,7 +219,7 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--enable-tcl --enable-cxx --enable-compat185 --enable-java --with-tcl=/usr/lib")
       builddir.install_test.append("docdir=/usr/share/doc/db")
 
-    if builddir.meta['PKG'] in 'doxygen':
+    if builddir.meta['PKG'] == 'doxygen':
       builddir.conf_add.append("--prefix /usr --docdir /usr/share/doc")
       builddir.make_files.append("src/Makefile.libdoxycfg")
       builddir.env['CFLAGS']="-Os -fno-asynchronous-unwind-tables -fomit-frame-pointer -fno-exceptions -fno-rtti -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
@@ -324,7 +324,7 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--enable-ipv6 --enable-rewrite --enable-bdb --enable-hdb --enable-meta --enable-ldap --enable-overlays")
       builddir.conf_test.append("--without-cyrus-sasl --disable-spasswd --disable-perl")
 
-    if builddir.meta['PKG'] in 'p11-kit':
+    if builddir.meta['PKG'] == 'p11-kit':
       builddir.conf_test.append("--without-trust-paths")
 
     if re.match('pcre',builddir.meta['PKG']):
