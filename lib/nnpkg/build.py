@@ -514,8 +514,12 @@ class BuildDir:
   # relative path, relative to the "use" above (or the cwd if already used)
   def rel_to_use(self,path):
     if self.cwd_use:
-      return os.path.relpath(path,os.path.join(self.nn_root,self.cwd_use))
-    return os.path.relpath(path,os.path.join(self.nn_root,self.cwd))
+      npath = os.path.relpath(path,os.path.join(self.nn_root,self.cwd_use))
+    else:
+      npath = os.path.relpath(path,os.path.join(self.nn_root,self.cwd))
+
+    if npath == 'configure': return "./configure"
+    return npath
 
   def set_debug(self,debug):
     self.debug=debug
