@@ -242,7 +242,10 @@ class AutoconfPackage(Package):
       builddir.env['LDFLAG_STATIC']=''
 
     if re.match('faac',builddir.meta['PKG']):
-      builddir.conf_test.append("--enable-drm")
+      builddir.conf_test.append("--enable-drm --with-mp4v2")
+
+    if re.match('faad2',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-drm --with-mpeg4ip")
 
     if re.match('ffmpeg',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-version3 --enable-gpl --enable-nonfree --enable-swscale --enable-postproc --disable-debug")
@@ -291,6 +294,12 @@ class AutoconfPackage(Package):
 
     if re.match('icu4c',builddir.meta['PKG']):
       builddir.use_dir('BUILD')
+
+    if re.match('libdv',builddir.meta['PKG']):
+      builddir.conf_test.append("--disable-xv")
+
+    if re.match('libquicktime',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-libdv --enable-gpl --with-faac --with-faad2")
 
     if re.match('libvpx',builddir.meta['PKG']):
       builddir.conf_add.append("--prefix=/usr")
