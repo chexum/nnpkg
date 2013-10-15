@@ -88,6 +88,8 @@ class Package(object):
   def setup(self,builddir):
     if builddir.meta['PKG'] in ['bzip2','libebml','libmatroska']:
       pass
+    elif builddir.meta['PKG'] in ['botan','Botan']:
+      builddir.command(['python','configure.py'],[],'setup')
     else:
       raise "Can't configure an unknown package!"
 
