@@ -86,7 +86,7 @@ class Package(object):
     self.conf_type=type
 
   def setup(self,builddir):
-    if re.match('bzip2',builddir.meta['PKG']):
+    if builddir.meta['PKG'] in ['bzip2','libebml','libmatroska']:
       pass
     else:
       raise "Can't configure an unknown package!"
@@ -111,6 +111,11 @@ class Package(object):
 
     if re.match('openldap',builddir.meta['PKG']):
       builddir.make_test = ["depend all"]
+
+    if builddir.meta['PKG'] in ['libebml','libmatroska']:
+      builddir.use_dir('make/linux')
+      builddir.make_test.append("prefix=/usr WARNINGFLAGS=$CXXFLAGS")
+      builddir.install_test.append("prefix=/usr")
 
     cmdline=["make"]
     possible_targets=shlex.split(" ".join(builddir.make_test))
