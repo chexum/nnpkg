@@ -125,14 +125,18 @@ class Package(object):
     builddir.command(cmdline,[],'build')
 
   def install(self,builddir):
+    destdir="$ROOT"
     if re.match('tig',builddir.meta['PKG']):
       builddir.install_test.append("install-doc-man")
+
+    if builddir.meta['PKG'] in ['botan','Botan']:
+      destdir="$ROOT/usr"
 
     if isinpath('cxroot'):
       cmdline=['cxroot','$ROOT']
     else:
       cmdline=[]
-    cmdline.extend(["make","DESTDIR=$ROOT"])
+    cmdline.extend(["make","DESTDIR=%s"%(destdir,)])
 
     possible_targets=shlex.split(" ".join(builddir.install_test))
     cmdline.extend(grep_all(possible_targets,builddir.make_files,builddir.get_use_dir()))
