@@ -595,6 +595,14 @@ class BuildDir:
           if log_proc: log_proc.stdin.write("! export %s\n"%(v,))
           print "! export",v
 
+    for name in self.env:
+      if name not in self.exec_env:
+        l = os.path.expandvars(self.env[name])
+        self.exec_env[name]=l
+        os.environ[name]=l
+        if log_proc: log_proc.stdin.write("! export %s=%s\n"%(name,l,))
+        print "! export %s=%s"%(name,l,)
+
     os.chdir(self.cwd)
     if self.cwd_use:
       rel_dir = os.path.relpath(self.cwd_use,self.cwd)
