@@ -86,7 +86,7 @@ class Package(object):
     self.conf_type=type
 
   def setup(self,builddir):
-    if builddir.meta['PKG'] in ['bzip2','libebml','libmatroska','lua']:
+    if builddir.meta['PKG'] in ['bzip2','libebml','libmatroska','lua','haproxy']:
       pass
     elif builddir.meta['PKG'] in ['botan','Botan']:
       builddir.command(['python','configure.py'],[],'setup')
@@ -113,6 +113,10 @@ class Package(object):
 
     if re.match('openldap',builddir.meta['PKG']):
       builddir.make_test = ["depend all"]
+
+    if re.match('haproxy',builddir.meta['PKG']):
+      builddir.make_test.append("PREFIX=/usr TARGET=linux2628")
+      builddir.install_test.append("PREFIX=/usr")
 
     if re.match('lua',builddir.meta['PKG']):
       builddir.make_test=[]
