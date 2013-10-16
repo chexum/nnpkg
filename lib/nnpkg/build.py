@@ -403,9 +403,8 @@ class AutoconfPackage(Package):
       env.append("%s=%s"%(v,builddir.env[v]))
 
     cmdline=['sh',builddir.rel_to_use(self.conf_script)]
+    cmdline.extend(shlex.split(" ".join(builddir.conf_add)))
     possible_opts=shlex.split(" ".join(builddir.conf_test))
-    fixed_opts=shlex.split(" ".join(builddir.conf_add))
-    cmdline.extend(fixed_opts)
     cmdline.extend(grep_all(possible_opts,builddir.conf_files))
     builddir.command(cmdline,env,'setup')
 
