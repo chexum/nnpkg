@@ -584,12 +584,14 @@ class BuildDir:
 
   def command(self,cmd,vars=None,logto=None):
     os.chdir(self.nn_root)
-    logdir = None
-    if self.do_multilog and logto and not self.debug:
+    if logto:
       logdir = os.path.join('.nnpkg',logto)
-      if os.path.exists("%s/donestate"%(logdir,)):
-        print "# not running %s again"%(logto,)
-        return 0
+      done = os.path.exists("%s/donestate"%(logdir,))
+    else:
+      logdir=None
+      done=False
+
+    if self.do_multilog and logto and not self.debug and not done:
       try: os.mkdir(logdir)
       except: pass
       log_proc = subprocess.Popen(['multilog','t','s999999','n25',logdir],stdin=subprocess.PIPE)
@@ -612,6 +614,10 @@ class BuildDir:
         os.environ[name]=l
         if log_proc: log_proc.stdin.write("! export %s=%s\n"%(name,l,))
         print "! export %s=%s"%(name,l,)
+
+    if done:
+      print "# not running %s again"%(logto,)
+      return 0
 
     os.chdir(self.cwd)
     if self.cwd_use:
