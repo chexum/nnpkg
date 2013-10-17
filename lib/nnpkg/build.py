@@ -143,8 +143,8 @@ class Package(object):
     if builddir.meta['PKG'] in ['botan','Botan']:
       destdir="$ROOT/usr"
 
-    if isinpath('cxroot'):
-      cmdline=['cxroot','$ROOT']
+    if len(builddir.root_redir)>0 and isinpath(builddir.root_redir[0]):
+      cmdline=builddir.root_redir
     else:
       cmdline=[]
     cmdline.extend(["make","DESTDIR=%s"%(destdir,)])
@@ -473,6 +473,7 @@ class BuildDir:
     self.scons_test=["PREFIX=/usr"]
     self.cmake_test=["-DCMAKE_INSTALL_PREFIX=/usr"]
     self.install_test=["install","INSTALL=install"]
+    self.root_redir=["cxroot","$ROOT"]
     self.env={}
     self.env['CC']="gcc"
     self.env['CFLAGS']="-Os -fno-asynchronous-unwind-tables -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
