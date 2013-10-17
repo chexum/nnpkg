@@ -597,6 +597,9 @@ class BuildDir:
       log_proc = subprocess.Popen(['multilog','t','s999999','n25',logdir],stdin=subprocess.PIPE)
     else: log_proc = None
 
+    if done:
+      print "# not running %s again"%(logto,)
+
     if vars and len(vars)>0:
       for v in vars:
         (name,line)=v.split("=",1)
@@ -616,7 +619,6 @@ class BuildDir:
         print "! export %s=%s"%(name,l,)
 
     if done:
-      print "# not running %s again"%(logto,)
       return 0
 
     os.chdir(self.cwd)
