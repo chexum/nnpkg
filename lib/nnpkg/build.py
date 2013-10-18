@@ -299,6 +299,9 @@ class AutoconfPackage(Package):
     if re.match('groff',builddir.meta['PKG']):
       builddir.conf_test.append("--with-appresdir=/etc/X11/app-defaults")
 
+    if re.match('guile',builddir.meta['PKG']):
+      builddir.env['CFLAGS']=builddir.cflags(opt='-O2',exc='')
+
     if re.match('httpd',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-layout=RedHat --exec-prefix=/usr --libexecdir=/usr/lib/apache/so")
       builddir.conf_test.append("--sysconfdir=/etc/apache --mandir=/usr/share/man/apache --datadir=/usr/share/apache")
@@ -476,10 +479,11 @@ class BuildDir:
     self.root_redir=["cxroot","$ROOT"]
     self.env={}
     self.env['CC']="gcc"
-    self.env['CFLAGS']="-Os -fno-asynchronous-unwind-tables -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
     self.env['CXX']="g++"
-    self.env['CXXFLAGS']="-Os -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+    self.env['CFLAGS']=self.cflags()
+    self.env['CXXFLAGS']=self.cflags(exc='')
     self.env['LDFLAGS']="-s -Wl,--as-needed"
+
     self.conf_files=[]
     self.make_files=['Makefile','GNUmakefile',]
 
@@ -550,6 +554,14 @@ class BuildDir:
 
     os.chdir(self.nn_root)
     self.cwd = self.nn_root
+
+  def cflags(self,opt='-Os',debug='',exc='-fno-asynchronous-unwind-tables',fp='-fomit-frame-pointer',f64='-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64'):
+    a=[x for x in [opt,debug,exc,fp,f64] if x]
+    return " ".join(a)
+    # -O2 -Os None
+    # -g None
+    # -fno-asynchronous-unwind-tables -fno-exceptions -fexceptions
+    # -fomit-frame-pointer None
 
   def get_root_path(self):
     return self.nn_root
