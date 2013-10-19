@@ -284,8 +284,8 @@ class AutoconfPackage(Package):
       builddir.env['CFLAGS']="-Os -fomit-frame-pointer -fexceptions -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DG_CONST_RETURN=const"
 
     if re.match('gmp',builddir.meta['PKG']):
-      builddir.env['CFLAGS']="-Os -fomit-frame-pointer -fexceptions -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
-      builddir.env['CXXFLAGS']="-Os -fomit-frame-pointer -fexceptions -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+      builddir.env['CFLAGS']=builddir.cflags(exc='-fexceptions')
+      builddir.env['CXXFLAGS']=builddir.cflags(exc='-fexceptions')
       builddir.conf_test.append("--enable-cxx --enable-mpfr --enable-mpbsd")
       ## flavour i386 vs i686
       builddir.conf_test.append("--build=i386-pc-linux-gnu")
