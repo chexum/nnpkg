@@ -300,7 +300,7 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--with-appresdir=/etc/X11/app-defaults")
 
     if re.match('guile',builddir.meta['PKG']):
-      builddir.env['CFLAGS']=builddir.cflags(opt='-O2',exc='')
+      builddir.env['CFLAGS']=builddir.cflags(opt='-O2',fp='',exc='')
 
     if re.match('httpd',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-layout=RedHat --exec-prefix=/usr --libexecdir=/usr/lib/apache/so")
