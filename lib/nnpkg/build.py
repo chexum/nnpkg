@@ -525,8 +525,10 @@ class BuildDir:
       sys.exit(1)
 #meta: PKG=sqlite PKGNAM=sqlite3 PKGVER=3.8.2 PKGVND= PKGCAT=
 
-    # everything GNU
-    if self.check_file('configure'):
+    # Some packages using cmake and configure use cmake for other platforms
+    # and less Unixy features - no symbol versioning, no tools, no .la files.
+    # fMake the exceptions here
+    if self.check_file('configure') and self.meta['PKG'] not in ['llvm','cfe']:
       self.pkg = AutoconfPackage('./configure')
     # Berkeley db
     elif self.check_file('dist/configure'):
@@ -543,8 +545,6 @@ class BuildDir:
       self.pkg = PythonPackage('setup.py')
     elif self.check_file('Jamroot'):
       self.pkg = JamPackage('Jamroot')
-    # Some packages using cmake and configure use cmake for other platforms
-    # and less Unixy features - no symbol versioning, no tools, no .la files.
     elif self.check_file('CMakeLists.txt'):
       self.pkg = CmakePackage("CMakeListst.txt")
     elif self.check_file('SConstruct'):
