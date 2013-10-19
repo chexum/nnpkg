@@ -369,8 +369,8 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("LDFLAGS=$LDFLAGS")
 
     if re.match('mpfr',builddir.meta['PKG']):
-      builddir.env['CFLAGS']="-Os -fomit-frame-pointer -fexceptions -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
-      builddir.env['CXXFLAGS']="-Os -fomit-frame-pointer -fexceptions -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+      builddir.env['CFLAGS']=builddir.cflags(exc='-fexceptions')
+      builddir.env['CXXFLAGS']=builddir.cflags(exc='-fexceptions')
       builddir.conf_test.append("--build=i386-pc-linux-gnu")
 
     if re.match('openldap',builddir.meta['PKG']):
