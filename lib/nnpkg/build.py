@@ -165,8 +165,8 @@ class CmakePackage(Package):
   def setup(self,builddir):
     cmd=['cmake']
     cmd.extend(shlex.split(" ".join(builddir.cmake_test)))
-    cmd.extend(".")
-    builddir.command(cmd,[],'build')
+    cmd.append(builddir.rel_to_use(builddir.nn_root))
+    builddir.command(cmd,[],'setup')
 
 class JamPackage(Package):
   """
