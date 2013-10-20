@@ -1,0 +1,5 @@
+* show commands
+* do package
+** make sure .elc .py[oc] dependencies are all right
+* detect build arch
+* support cross
