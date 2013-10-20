@@ -1,6 +1,8 @@
 import os,sys,subprocess
 import re,shlex
 
+BUILD='i586-pc-linux-gnu'
+
 def confregex(opts):
   res=[]
   for opt in opts:
@@ -282,6 +284,14 @@ class AutoconfPackage(Package):
     if re.match('gamin',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/usr/sbin")
       builddir.env['CFLAGS']="-Os -fomit-frame-pointer -fexceptions -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DG_CONST_RETURN=const"
+
+    if re.match('binutils',builddir.meta['PKG']):
+      builddir.conf_test.append("--enable-targets=i586-pc-linux-gnu,i586-pc-mingw32,x86_64-pc-linux-gnu,x86_64-pc-mingw32,i386-linux-uclibc,arm-linux-gnueabi,mipsel-linux-uclibc,m68k-linux-gnu")
+#     builddir.conf_test.append("--enable-gold") -- gold is not compatible with most unusual platforms yet
+      builddir.conf_files.append("bfd/configure")
+      builddir.use_dir('BUILD')
+      builddir.conf_test.append("--build=%s --host=%s"%(BUILD,BUILD,))
+#     builddir.conf_test.append("--host=x86_64-pc-linux-gnu --build=i586-pc-linux-gnu")
 
     if re.match('gmp',builddir.meta['PKG']):
       builddir.env['CFLAGS']=builddir.cflags(exc='-fexceptions')
