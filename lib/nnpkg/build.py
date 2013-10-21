@@ -183,7 +183,7 @@ class JamPackage(Package):
     env=[]
     for v in sorted(builddir.env.iterkeys()):
       env.append("%s=%s"%(v,builddir.env[v]))
-    builddir.command(['sh','bootstrap.sh'],env,'setup')
+    builddir.command(['$SHELL','bootstrap.sh'],env,'setup')
 
   def build(self,builddir):
     builddir.command(['./bjam','release','debug','threading=multi','toolset=gcc','--layout=tagged'],[],'build')
@@ -208,7 +208,7 @@ class AutoconfPackage(Package):
       help_option = grep_all(['--help'],[self.conf_script])
       if len(help_option)>0:
         conf_path = builddir.rel_to_use(self.conf_script)
-        builddir.command(['sh',conf_path,'--help'],[],'help')
+        builddir.command(['$SHELL',conf_path,'--help'],[],'help')
 
     # set defaults for X packages
     if builddir.meta['PKGVND'] in ['X11']:
@@ -426,7 +426,7 @@ class AutoconfPackage(Package):
     for v in sorted(builddir.env.iterkeys()):
       env.append("%s=%s"%(v,builddir.env[v]))
 
-    cmdline=['sh',builddir.rel_to_use(self.conf_script)]
+    cmdline=['$SHELL',builddir.rel_to_use(self.conf_script)]
     cmdline.extend(shlex.split(" ".join(builddir.conf_add)))
     possible_opts=shlex.split(" ".join(builddir.conf_test))
     cmdline.extend(grep_all(possible_opts,builddir.conf_files))
@@ -490,6 +490,7 @@ class BuildDir:
     self.env={}
     self.env['CC']="gcc"
     self.env['CXX']="g++"
+    self.env['SHELL']='/bin/sh'
     self.env['CFLAGS']=self.cflags()
     self.env['CXXFLAGS']=self.cflags(exc='')
     self.env['LDFLAGS']="-s -Wl,--as-needed"
