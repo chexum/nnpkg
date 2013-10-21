@@ -165,6 +165,21 @@ class CmakePackage(Package):
     Package.__init__(self,'cmake',script,dir)
 
   def setup(self,builddir):
+    if re.match('llvm',builddir.meta['PKG']):
+      # llvm wants to do this, but doesn't quite make it
+      builddir.env['CFLAGS']=''
+      builddir.env['CXXFLAGS']=''
+      builddir.env['LDFLAGS']=''
+      builddir.use_dir('BUILD')
+      builddir.cmake_test.append("-DBUILD_SHARED_LIBS=1")
+
+    if re.match('cfe',builddir.meta['PKG']):
+      builddir.env['CFLAGS']=''
+      builddir.env['CXXFLAGS']=''
+      builddir.env['LDFLAGS']=''
+      builddir.use_dir('BUILD')
+      builddir.cmake_test.append('-DBUILD_SHARED_LIBS=1 -DCLANG_PATH_TO_LLVM_BUILD=/usr')
+
     cmd=['cmake']
     cmd.extend(shlex.split(" ".join(builddir.cmake_test)))
     cmd.append(builddir.rel_to_use(builddir.nn_root))
