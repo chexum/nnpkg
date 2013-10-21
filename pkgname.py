@@ -20,6 +20,7 @@ pkgnames={
 
 categories={
 	'mesa':'X11',
+	'glu':'X11',
 	'xpyb':'X11',
 	'libpciaccess':'X11',
 }
@@ -430,17 +431,18 @@ def pkgsplitname(fn):
 
 	if pkgnam=='libusbx': pkgnam='libusb'
 
+	if pkgnam == 'libsigc++': pkgnam='libsigcxx'
+
 	if pkgnam in ['libusb','libusb-compat'] and ver[0]=='0':
 		pkgnam='libusb_compat'
 
-	if pkgnam in ['db']: pkgnam='db%s'%(ver[0],)
+	if pkgnam in ['db','db3','db4','db5','db6',]:
+		pkgnam='db%s'%(ver[0],)
 
-	if pkgnam in 'libsigc++': pkgnam='libsigcxx'
-
-	if pkgnam in ['pkg-config','pkgconfig']: pkgnam='pkgconfig'
+	if pkgnam in ['pkg-config','pkgconfig']:
+		pkgnam='pkgconfig'
 
 	if pkgnam in ['libpng']: pkgnam='libpng%s%s'%(ver[0],ver[2])
-
 
 	if strvnd == 'X11':
 		pkgcat = 'X11'
