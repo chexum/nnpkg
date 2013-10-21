@@ -268,8 +268,9 @@ class AutoconfPackage(Package):
     if builddir.meta['PKG'] == 'doxygen':
       builddir.conf_add.append("--prefix /usr --docdir /usr/share/doc")
       builddir.make_files.append("src/Makefile.libdoxycfg")
-      builddir.env['CFLAGS']="-Os -fno-asynchronous-unwind-tables -fomit-frame-pointer -fno-exceptions -fno-rtti -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
-      builddir.make_test.append("CFLAGS=$CFLAGS CXXFLAGS=$CFLAGS")
+      builddir.env['CFLAGS']=builddir.cflags(exc='-fno-exceptions -fno-rtti')
+      builddir.env['CXXFLAGS']=builddir.cflags(exc='-fno-exceptions -fno-rtti')
+      builddir.make_test.append("CFLAGS=$CFLAGS CXXFLAGS=$CXXFLAGS")
       builddir.install_test.append("!INSTALL=/usr")
 
     if re.match('e2fsprogs',builddir.meta['PKG']):
