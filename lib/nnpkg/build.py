@@ -388,9 +388,6 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("CXXFLAGS=$CXXFLAGS")
       builddir.conf_test.append("LDFLAGS=$LDFLAGS")
 
-    if re.match('neon',builddir.meta['PKG']):
-      builddir.conf_test.append("--with-ssl=openssl")
-
     if re.match('openldap',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/usr/sbin --localstatedir=/var/lib/openldap-data")
       builddir.conf_test.append("--enable-ipv6 --enable-rewrite --enable-bdb --enable-hdb --enable-meta --enable-ldap --enable-overlays")
@@ -419,6 +416,9 @@ class AutoconfPackage(Package):
       builddir.env['CFLAGS']=builddir.cflags(exc='-fexceptions')
       builddir.env['CXXFLAGS']=builddir.cflags(exc='-fexceptions')
       builddir.conf_test.append("--build=i386-pc-linux-gnu")
+
+    if re.match('neon',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-ssl=openssl")
 
     if re.match('openldap',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/usr/sbin --localstatedir=/var/lib/openldap-data")
