@@ -113,9 +113,6 @@ class Package(object):
       builddir.make_test.append("CFLAGS=$CFLAGS LDFLAGS=$LDFLAGS")
       builddir.install_test.append("prefix=/usr")
 
-    if re.match('openldap',builddir.meta['PKG']):
-      builddir.make_test = ["depend all"]
-
     if re.match('haproxy',builddir.meta['PKG']):
       builddir.make_test.append("PREFIX=/usr TARGET=linux2628")
       builddir.install_test.append("PREFIX=/usr")
@@ -388,11 +385,6 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("CXXFLAGS=$CXXFLAGS")
       builddir.conf_test.append("LDFLAGS=$LDFLAGS")
 
-    if re.match('openldap',builddir.meta['PKG']):
-      builddir.conf_test.append("--libexecdir=/usr/sbin --localstatedir=/var/lib/openldap-data")
-      builddir.conf_test.append("--enable-ipv6 --enable-rewrite --enable-bdb --enable-hdb --enable-meta --enable-ldap --enable-overlays")
-      builddir.conf_test.append("--without-cyrus-sasl --disable-spasswd --disable-perl")
-
     if re.match('pcre',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-utf8 --enable-unicode-properties --enable-pcre16 --enable-jit")
       builddir.conf_test.append("--enable-pcregrep-libz --enable-pcregrep-libbz2")
@@ -424,6 +416,7 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--libexecdir=/usr/sbin --localstatedir=/var/lib/openldap-data")
       builddir.conf_test.append("--enable-ipv6 --enable-rewrite --enable-bdb --enable-hdb --enable-meta --enable-ldap --enable-overlays")
       builddir.conf_test.append("--without-cyrus-sasl --disable-spasswd --disable-perl")
+      builddir.make_test = ["depend all"]
 
     if builddir.meta['PKG'] == 'p11-kit':
       builddir.conf_test.append("--without-trust-paths")
