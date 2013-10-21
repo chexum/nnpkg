@@ -226,7 +226,7 @@ class AutoconfPackage(Package):
         builddir.command(['$SHELL',conf_path,'--help'],[],'help')
 
     # set defaults for X packages
-    if builddir.meta['PKGVND'] in ['X11']:
+    if builddir.meta['PKGVND'] in ['X11'] or builddir.meta['PKGCAT'] in ['X11']:
       builddir.conf_test.append("--libexecdir=/usr/X11/lib --bindir=/usr/X11/bin --libdir=/usr/X11/lib")
       builddir.conf_test.append("--sysconfdir=/etc/X11 --mandir=/usr/X11/man --includedir=/usr/X11/include")
 
