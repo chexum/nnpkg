@@ -385,24 +385,7 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("CXXFLAGS=$CXXFLAGS")
       builddir.conf_test.append("LDFLAGS=$LDFLAGS")
 
-    if re.match('pcre',builddir.meta['PKG']):
-      builddir.conf_test.append("--enable-utf8 --enable-unicode-properties --enable-pcre16 --enable-jit")
-      builddir.conf_test.append("--enable-pcregrep-libz --enable-pcregrep-libbz2")
 
-    if re.match('subversion',builddir.meta['PKG']):
-      builddir.install_test.append("install-swig-rb install-swig-py install-swig-pl")
-      builddir.env['CC']="gcc -std=gnu99"
-
-    if re.match('tar',builddir.meta['PKG']):
-      builddir.conf_test.append("--libexecdir=/etc")
-
-    if re.match('LVM2',builddir.meta['PKG']):
-      builddir.conf_test.append("--sbindir=/sbin --libdir=/lib --exec-prefix= --enable-static_link")
-      builddir.make_files.append('make.tmpl')
-
-    if re.match('lzip',builddir.meta['PKG']):
-      builddir.conf_test.append("CXXFLAGS=$CXXFLAGS")
-      builddir.conf_test.append("LDFLAGS=$LDFLAGS")
 
     if re.match('mpfr',builddir.meta['PKG']):
       builddir.env['CFLAGS']=builddir.cflags(exc='-fexceptions')
@@ -430,6 +413,10 @@ class AutoconfPackage(Package):
 
     if builddir.meta['PKG'] == 'rrdtool':
       builddir.conf_test.append("--disable-perl --disable-lua")
+
+    if re.match('subversion',builddir.meta['PKG']):
+      builddir.install_test.append("install-swig-rb install-swig-py install-swig-pl")
+      builddir.env['CC']="gcc -std=gnu99"
 
     if re.match('tar',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/etc")
