@@ -385,7 +385,14 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("CXXFLAGS=$CXXFLAGS")
       builddir.conf_test.append("LDFLAGS=$LDFLAGS")
 
+    if re.match('MesaLib',builddir.meta['PKG']):
+      # needs GLUT in tree
+      builddir.conf_test.append("--enable-gles1 --enable-gles2 --enable-osmesa")
+      builddir.conf_test.append("--with-gallium-drivers=i915,ilo,nouveau,r300,swrast")
+      #uilddir.conf_test.append("--with-gallium-drivers=i915,ilo,nouveau,r300,r600,radeonsi,freedreno,svga,swrast")
 
+    if re.match('mkvtoolnix',builddir.meta['PKG']):
+      builddir.env['SHELL']='/bin/bash'
 
     if re.match('mpfr',builddir.meta['PKG']):
       builddir.env['CFLAGS']=builddir.cflags(exc='-fexceptions')
@@ -394,6 +401,13 @@ class AutoconfPackage(Package):
 
     if re.match('neon',builddir.meta['PKG']):
       builddir.conf_test.append("--with-ssl=openssl")
+
+    if re.match('ocaml',builddir.meta['PKG']):
+      builddir.conf_add.append("--prefix /usr")
+      builddir.make_files.append("config/Makefile")
+      builddir.make_test=["world opt opt.opt"]
+      builddir.install_test.append("PREFIX=$ROOT/usr")
+      builddir.root_redir=[]
 
     if re.match('openldap',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/usr/sbin --localstatedir=/var/lib/openldap-data")
@@ -432,6 +446,9 @@ class AutoconfPackage(Package):
       builddir.conf_files.append("src/auto/configure")
       ## flavour nogui (vs gtk2)
 #     builddir.conf_test.append("--disable-gui --without-x --disable-xim")
+
+    if re.match('wxWidgets',builddir.meta['PKG']):
+      builddir.conf_test.append("--disable-compat26 --with-opengl --enable-unicode")
 
     if re.match('xvidcore',builddir.meta['PKG']):
       builddir.use_dir("build/generic")
