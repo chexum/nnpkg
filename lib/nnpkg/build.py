@@ -309,6 +309,27 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--build=%s --host=%s"%(BUILD,BUILD,))
 #     builddir.conf_test.append("--host=x86_64-pc-linux-gnu --build=i586-pc-linux-gnu")
 
+    if re.match('glibc',builddir.meta['PKG']):
+      builddir.conf_test.append("--libexecdir=/usr/lib/misc --localstatedir=/var --mandir=/usr/share/man --infodir=/usr/share/info")
+      builddir.conf_test.append("--enable-add-ons=libidn,nptl --enable-bind-now --enable-kernel=2.6.26 --disable-profile")
+      builddir.conf_test.append("--with-gd=no --without-cvs")
+      builddir.env['CFLAGS']='-Os'
+      builddir.env['CXXFLAGS']='-Os'
+      builddir.env['LDFLAGS']='-s'
+      builddir.use_dir('BUILD')
+      builddir.install_test.append("install_root=$ROOT")
+      builddir.root_redir=[]
+      #builddir.conf_add.append("i586-pc-linux-gnu")
+
+    if re.match('gcc',builddir.meta['PKG']):
+      builddir.conf_files.append("gcc/configure libjava/configure")
+      builddir.conf_test.append("--with-system-zlib --enable-threads")
+      builddir.conf_test.append("--enable-languages=c,c++,go,objc,java,ada,fortran")
+      builddir.conf_test.append("--enable-cloog-backend=isl")
+      builddir.conf_add.append("--with-ecj-jar=/usr/share/java/ecj.jar")
+      builddir.conf_add.append("--enable-__cxa_atexit --enable-clocale=gnu --enable-libada")
+      builddir.use_dir('BUILD')
+
     if re.match('gmp',builddir.meta['PKG']):
       builddir.env['CFLAGS']=builddir.cflags(exc='-fexceptions')
       builddir.env['CXXFLAGS']=builddir.cflags(exc='-fexceptions')
