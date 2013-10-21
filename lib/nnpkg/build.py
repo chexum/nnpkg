@@ -299,7 +299,7 @@ class AutoconfPackage(Package):
 
     if re.match('gamin',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/usr/sbin")
-      builddir.env['CFLAGS']="-Os -fomit-frame-pointer -fexceptions -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DG_CONST_RETURN=const"
+      builddir.env['CFLAGS']=builddir.cflags(exc='-fexceptions')+" -DG_CONST_RETURN=const"
 
     if re.match('binutils',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-targets=i586-pc-linux-gnu,i586-pc-mingw32,x86_64-pc-linux-gnu,x86_64-pc-mingw32,i386-linux-uclibc,arm-linux-gnueabi,mipsel-linux-uclibc,m68k-linux-gnu")
