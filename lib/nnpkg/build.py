@@ -385,12 +385,13 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("LDFLAGS=$LDFLAGS")
 
     if re.match('MesaLib',builddir.meta['PKG']):
-      # needs GLUT in tree
+      # glu in freeglu
       builddir.conf_test.append("--enable-gles1 --enable-gles2 --enable-osmesa")
       builddir.conf_test.append("--with-gallium-drivers=i915,ilo,nouveau,r300,swrast")
       #uilddir.conf_test.append("--with-gallium-drivers=i915,ilo,nouveau,r300,r600,radeonsi,freedreno,svga,swrast")
 
     if re.match('mkvtoolnix',builddir.meta['PKG']):
+      # rake;rake install prefix=`pwd`/ROOT/usr
       builddir.env['SHELL']='/bin/bash'
 
     if re.match('mpfr',builddir.meta['PKG']):
