@@ -372,7 +372,6 @@ class AutoconfPackage(Package):
 
     if re.match('libvpx',builddir.meta['PKG']):
       builddir.conf_add.append("--prefix=/usr")
-      builddir.conf_script="./configure"
 
     if re.match('libxml2',builddir.meta['PKG']):
       builddir.conf_test.append("--with-icu")
