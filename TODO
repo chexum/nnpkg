@@ -3,3 +3,7 @@
 ** make sure .elc .py[oc] dependencies are all right
 * detect build arch
 * support cross
+** --host/--build i586-pc-linux-gnu
+** --target/--host x86_64-pc-linux-gnu
+** raspberry --with=armv6 --with-tune arm1176jz-s --with-fpu=vfp
+** beaglebone armv7a-hardfloat-linux-gnueabi
