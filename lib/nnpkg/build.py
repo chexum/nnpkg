@@ -447,7 +447,8 @@ class AutoconfPackage(Package):
       ## flavour nogui (vs gtk2)
 #     builddir.conf_test.append("--disable-gui --without-x --disable-xim")
 
-    if re.match('wxWidgets',builddir.meta['PKG']):
+    if re.match('wxWidgets|wxPython',builddir.meta['PKG']):
+      # wxpython actually lives in a subdirectory - flavour?
       builddir.conf_test.append("--disable-compat26 --with-opengl --enable-unicode")
 
     if re.match('xvidcore',builddir.meta['PKG']):
