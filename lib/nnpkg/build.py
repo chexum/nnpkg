@@ -129,6 +129,9 @@ class Package(object):
       builddir.make_test.append("prefix=/usr WARNINGFLAGS=$CXXFLAGS")
       builddir.install_test.append("prefix=/usr")
 
+    if re.match('nspr|nss',builddir.meta['PKG']):
+      builddir.make_files.append('config/rules.mk')
+
     cmdline=["make"]
     possible_targets=shlex.split(" ".join(builddir.make_test))
     cmdline.extend(grep_all(possible_targets,builddir.make_files,builddir.get_use_dir()))
