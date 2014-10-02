@@ -418,6 +418,8 @@ class AutoconfPackage(Package):
     if re.match('libxml2',builddir.meta['PKG']):
       builddir.conf_test.append("--with-icu")
 
+    # ldns - config/make/install in examples&drill -- flavour?
+
     if re.match('LVM2',builddir.meta['PKG']):
       builddir.conf_test.append("--sbindir=/sbin --libdir=/lib --exec-prefix= --enable-static_link")
       builddir.make_files.append('make.tmpl')
