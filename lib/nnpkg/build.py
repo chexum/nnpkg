@@ -325,6 +325,17 @@ class AutoconfPackage(Package):
       builddir.install_test.append("install_root=$ROOT")
       builddir.root_redir=[]
       #builddir.conf_add.append("i586-pc-linux-gnu")
+      # cross
+      #uilddir.env['CC']='x86_64-pc-linux-gnu-gcc -m64'
+      if False:
+        builddir.env['CC']='x86_64-pc-linux-gnu-gcc -m32' #-m64
+        builddir.conf_test.append("--build=i586-pc-linux-gnu --host=x86_64-pc-linux-gnu")
+        builddir.conf_test.append("--prefix=/usr/x86_64-pc-linux-gnu")
+        # 64: lib64|lib +lib32 +libx32
+        # 32: lib
+        builddir.conf_test.append("--libdir=/usr/x86_64-pc-linux-gnu/lib32 --libexecdir=/usr/x86_64-pc-linux-gnu/lib32")
+        builddir.conf_test.append("--sysconfdir=/usr/x86_64-pc-linux-gnu/etc")
+        builddir.conf_test.append("!--localstatedir= !--mandir= !--infodir=")
 
     if re.match('gcc',builddir.meta['PKG']):
       builddir.conf_files.append("gcc/configure libjava/configure")
@@ -334,6 +345,22 @@ class AutoconfPackage(Package):
       builddir.conf_add.append("--with-ecj-jar=/usr/share/java/ecj.jar")
       builddir.conf_add.append("--enable-__cxa_atexit --enable-clocale=gnu --enable-libada")
       builddir.use_dir('BUILD')
+      ## todo
+      #uilddir.conf_add.append("i586-pc-linux-gnu")
+      #uilddir.conf_test.append("--host=i586-pc-linux-gnu --build=i586-pc-linux-gnu --target=x86_64-pc-mingw32")
+      builddir.conf_test.append("--host=i586-pc-linux-gnu --build=i586-pc-linux-gnu --target=x86_64-pc-linux-gnu")
+      builddir.conf_add.append("--enable-multiarch --with-abi=m64 --with-multilib-list=m64,mx32 --with-tune=generic")
+      #pass1
+      #builddir.conf_test.append("--enable-languages=c,c++")
+      #builddir.conf_test.append("--with-newlib --without-headers")
+      #builddir.conf_add.append("--disable-decimal-float --disable-threads --disable-libatomic --disable-libgomp --disable-libitm --disable-libmudflap --disable-libquadmath --disable-libsanitizer --disable-libssp")
+      #builddir.conf_add.append("--disable-libstdc++-v3")
+      # with-arch --with-tune --with-abi --with-float=soft/hard
+      # --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
+      # raspberry
+      # --with-arch=armv6 --with-tune=arm1176jz-s --with-fpu=vfp
+      # beaglebone
+      # armv7a-hardfloat-linux-gnueabi
 
     if re.match('gmp',builddir.meta['PKG']):
       builddir.env['CFLAGS']=builddir.cflags(exc='-fexceptions')
