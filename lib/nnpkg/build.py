@@ -239,6 +239,8 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--with-crypto --with-ldap")
       builddir.env['CC']="gcc -std=gnu99"
 
+    if re.match('autogen',builddir.meta['PKG']):
+      builddir.root_redir=[]
     if re.match('avahi',builddir.meta['PKG']):
       builddir.conf_test.append("--with-distro=gentoo --enable-core-docs --enable-compat-libdns_sd --enable-compat-howl")
       builddir.conf_test.append("--disable-mono --disable-gtk3")
