@@ -223,6 +223,7 @@ class AutoconfPackage(Package):
       help_option = grep_all(['--help'],[self.conf_script])
       if len(help_option)>0:
         conf_path = builddir.rel_to_use(self.conf_script)
+        builddir.mustsucceed=False
         builddir.command(['$SHELL',conf_path,'--help'],[],'help')
 
     # set defaults for X packages
@@ -535,6 +536,7 @@ class BuildDir:
     self.env['CFLAGS']=self.cflags()
     self.env['CXXFLAGS']=self.cflags(exc='')
     self.env['LDFLAGS']="-s -Wl,--as-needed"
+    self.mustsucceed=True
 
     self.conf_files=[]
     self.make_files=['Makefile','GNUmakefile',]
@@ -716,7 +718,7 @@ class BuildDir:
       if log_proc: log_proc.terminate()
     if log_proc: log_proc.wait()
     if cmd_proc: cmd_proc.wait()
-    if cmd_proc.returncode:
+    if cmd_proc.returncode and self.mustsucceed:
       sys.exit(1)
 
     os.chdir(self.nn_root)
