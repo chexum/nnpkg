@@ -583,6 +583,7 @@ class BuildDir:
     self.mustsucceed=True
 
     self.conf_files=[]
+    # or perhaps use make -p
     self.make_files=['Makefile','GNUmakefile',]
 
     self.exec_env={}
