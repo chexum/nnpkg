@@ -6,8 +6,8 @@ BUILD='i586-pc-linux-gnu'
 def confregex(opts):
   res=[]
   for opt in opts:
-    diropt=re.match("^\!?(.*)=(/.*)$",opt)
-    if diropt: res.append(r'(\s*%s=[A-Z]+\s)'%(diropt.group(1),))
+    diropt=re.match("^\!?\[?(.*)=(/.*)(\]|$)",opt)
+    if diropt: res.append(r'(\s*\[?%s=[A-Z]+(\s|\]))'%(diropt.group(1),))
     else:
       enopt=re.match("^\!?--(en|dis)able-(.*?)($|=)",opt)
       if enopt: res.append(r'(\s*--(en|dis)able-%s(\s|\[|=))'%(enopt.group(2),))
@@ -456,6 +456,9 @@ class AutoconfPackage(Package):
 
     if re.match('xvidcore',builddir.meta['PKG']):
       builddir.use_dir("build/generic")
+
+    if re.match('zlib',builddir.meta['PKG']):
+      builddir.conf_test.append("--prefix=/usr")
 
     if re.match('zsh',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-maildir-support --with-curses-terminfo --disable-gdbm")
