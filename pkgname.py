@@ -287,10 +287,11 @@ def pkgsplitname(fn):
 	# gtk sigc++ -resplit without +
 		SEP=['-','.','_',' ',',']
 		w = re.split(r'([-_. ])',fn)
-	elif re.search(r'(?i)setup\d*$',w[0]):
-		m = re.match(r'(?i)(.*?)(setup\d*)',w[0])
-		w[0]=m.group(1)
-		w[1]=''.join([m.group(2),w[1]])
+	elif re.search(r'(?i)\s*setup\s*\d*$',w[0]):
+		m = re.match(r'(?i)(.*?)(\s*setup\s*\d*)',w[0])
+		if m.group(1) <> 'crypt':
+			w[0]=m.group(1)
+			w[1]=''.join([m.group(2),w[1]])
 
 	if w[0] in ['jpegsrc','boost','libpng','dz','krb5','openssl','sysvinit','oggenc','qt','pam']:
 		# jpegsrc.v8a.tar.gz
