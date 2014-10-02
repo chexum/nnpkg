@@ -244,6 +244,8 @@ class AutoconfPackage(Package):
     if re.match('avahi',builddir.meta['PKG']):
       builddir.conf_test.append("--with-distro=gentoo --enable-core-docs --enable-compat-libdns_sd --enable-compat-howl")
       builddir.conf_test.append("--disable-mono --disable-gtk3")
+      # XXX
+      builddir.conf_test.append("--disable-pygtk --disable-python-dbus --disable-qt3 --disable-qt4")
       builddir.conf_test.append("--with-autoipd-user=autoipd --with-autoipd-group=autoupd")
     if re.match('pulseaudio',builddir.meta['PKG']):
       builddir.conf_test.append("--with-access-group=pulseacc --enable-lirc --enable-udev --with-fftw --disable-tcpwrap")
