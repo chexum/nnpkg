@@ -297,6 +297,11 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--enable-libfaac --enable-libmp3lame")
       builddir.conf_test.append("--enable-libx264 --enable-libvpx")
       builddir.conf_test.append("--enable-libx264 --enable-libxvid")
+      # ./configure --prefix=/usr --enable-shared
+      # --enable-libdirac --enable-libfaac
+      # --enable-libspeex --enable-libvorbis --enable-libtheora \
+      # --enable-libschroedinger
+      # --enable-libvo-aacenc --enable-libfreetype --enable-libcelt \
 
     if re.match('freetype',builddir.meta['PKG']):
       builddir.conf_files.append("builds/unix/configure")
@@ -404,6 +409,8 @@ class AutoconfPackage(Package):
 
     if re.match('libquicktime',builddir.meta['PKG']):
       builddir.conf_test.append("--with-libdv --enable-gpl --with-faac --with-faad2")
+      # make + make install in utils
+      # patch png12/png14
 
     if re.match('libvpx',builddir.meta['PKG']):
       builddir.conf_add.append("--prefix=/usr")
@@ -485,6 +492,10 @@ class AutoconfPackage(Package):
     if re.match('wxWidgets|wxPython',builddir.meta['PKG']):
       # wxpython actually lives in a subdirectory - flavour?
       builddir.conf_test.append("--disable-compat26 --with-opengl --enable-unicode")
+
+    if re.match('x264',builddir.meta['PKG']):
+      builddir.env['SHELL']='/bin/bash'
+      builddir.make_files.append('config.mak')
 
     if re.match('xvidcore',builddir.meta['PKG']):
       builddir.use_dir("build/generic")
