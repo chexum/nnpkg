@@ -473,6 +473,10 @@ class AutoconfPackage(Package):
     if re.match('ruby',builddir.meta['PKG']):
       builddir.make_files.append("common.mk")
 
+    if re.match('rsync',builddir.meta['PKG']):
+      builddir.conf_files.append("configure.sh")
+      builddir.conf_test.append("--with-rsh=ssh --enable-acl-support")
+
     if builddir.meta['PKG'] == 'rrdtool':
       builddir.conf_test.append("--disable-perl --disable-lua")
 
