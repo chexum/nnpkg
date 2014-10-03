@@ -319,6 +319,10 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--build=%s --host=%s"%(BUILD,BUILD,))
 #     builddir.conf_test.append("--host=x86_64-pc-linux-gnu --build=i586-pc-linux-gnu")
 
+    if re.match('fakeroot',builddir.meta['PKG']):
+      builddir.conf_files.append("configure.sh")
+      builddir.env['CFLAGS']=builddir.cflags(f64='')
+
     if re.match('glibc',builddir.meta['PKG']):
       builddir.conf_test.append("--libexecdir=/usr/lib/misc --localstatedir=/var --mandir=/usr/share/man --infodir=/usr/share/info")
       builddir.conf_test.append("--enable-add-ons=libidn,nptl --enable-bind-now --enable-kernel=2.6.26 --disable-profile")
