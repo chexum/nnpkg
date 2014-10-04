@@ -26,8 +26,8 @@ def confregex(opts):
 def makeregex(targets):
   res = []
   for t in targets:
-    opt=re.match(r"\!?\s*(.*)\s*=\s*(.*)\s*",t)
-    if opt: res.append(r'^\s*%s\s*='%(opt.group(1),))
+    opt=re.match(r"\!?\s*(.*)\s*\??\s*=\s*(.*)\s*",t)
+    if opt: res.append(r'^\s*%s\s*\??\s*='%(opt.group(1),))
     else: res.append(r'((^|[^#:]+\s)%s(:|\s+[^#:]*:))'%(t,))
   return res
 
@@ -88,7 +88,7 @@ class Package(object):
     self.conf_type=type
 
   def setup(self,builddir):
-    if builddir.meta['PKG'] in ['bzip2','libebml','libmatroska','lua','haproxy']:
+    if builddir.meta['PKG'] in ['bzip2','libebml','libmatroska','lua','haproxy','btrfs-progs']:
       pass
     elif builddir.meta['PKG'] in ['botan','Botan']:
       builddir.command(['python','configure.py'],[],'setup')
@@ -144,6 +144,9 @@ class Package(object):
 
     if builddir.meta['PKG'] in ['botan','Botan']:
       destdir="$ROOT/usr"
+
+    if re.match('btrfs-progs',builddir.meta['PKG']):
+      builddir.install_test.append("prefix=/usr")
 
     if len(builddir.root_redir)>0 and isinpath(builddir.root_redir[0]):
       cmdline=builddir.root_redir
