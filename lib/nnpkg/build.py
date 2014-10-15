@@ -474,6 +474,10 @@ class AutoconfPackage(Package):
     if builddir.meta['PKG'] == 'p11-kit':
       builddir.conf_test.append("--without-trust-paths")
 
+    if re.match('qemu',builddir.meta['PKG']):
+      builddir.env['CFLAGS']=builddir.cflags(exc='')+' -I/usr/X11/include'
+      builddir.env['LDFLAGS']=builddir.ldflags()+' -L/usr/X11/lib'
+
     if re.match('pcre',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-utf8 --enable-unicode-properties --enable-pcre16 --enable-jit")
       builddir.conf_test.append("--enable-pcregrep-libz --enable-pcregrep-libbz2")
@@ -595,7 +599,7 @@ class BuildDir:
     self.env['SHELL']='/bin/sh'
     self.env['CFLAGS']=self.cflags()
     self.env['CXXFLAGS']=self.cflags(exc='')
-    self.env['LDFLAGS']="-s -Wl,--as-needed"
+    self.env['LDFLAGS']=self.ldflags()
     self.mustsucceed=True
 
     self.conf_files=[]
@@ -669,6 +673,9 @@ class BuildDir:
 
     os.chdir(self.nn_root)
     self.cwd = self.nn_root
+
+  def ldflags(self):
+    return "-s -Wl,--as-needed"
 
   def cflags(self,opt='-Os',debug='',exc='-fno-asynchronous-unwind-tables',fp='-fomit-frame-pointer',f64='-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64'):
     a=[x for x in [opt,debug,exc,fp,f64] if x]
