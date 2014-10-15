@@ -239,12 +239,12 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--sysconfdir=/etc/X11 --mandir=/usr/X11/man --includedir=/usr/X11/include")
 
     if re.match('apr',builddir.meta['PKG']):
-      builddir.conf_test.append("--with-installbuilddir=/usr/share/apr-1/build")
       builddir.env['CC']="gcc -std=gnu99"
+      builddir.conf_test.append("--with-installbuilddir=/usr/share/apr-1/build")
     if re.match('apr-util',builddir.meta['PKG']):
+      builddir.env['CC']="gcc -std=gnu99"
       builddir.conf_test.append("--with-apr=/usr --with-openssl=/usr --with-sqlite3=/usr --with-expat=/usr --with-berkeley-db=/usr")
       builddir.conf_test.append("--with-crypto --with-ldap")
-      builddir.env['CC']="gcc -std=gnu99"
 
     if re.match('autogen',builddir.meta['PKG']):
       builddir.root_redir=[]
@@ -278,20 +278,20 @@ class AutoconfPackage(Package):
       builddir.install_test.append("docdir=/usr/share/doc/db")
 
     if builddir.meta['PKG'] == 'doxygen':
-      builddir.conf_add.append("--prefix /usr --docdir /usr/share/doc")
-      builddir.make_files.append("src/Makefile.libdoxycfg")
       builddir.env['CFLAGS']=builddir.cflags(exc='-fno-exceptions -fno-rtti')
       builddir.env['CXXFLAGS']=builddir.cflags(exc='-fno-exceptions -fno-rtti')
+      builddir.conf_add.append("--prefix /usr --docdir /usr/share/doc")
+      builddir.make_files.append("src/Makefile.libdoxycfg")
       builddir.make_test.append("CFLAGS=$CFLAGS CXXFLAGS=$CXXFLAGS")
       builddir.install_test.append("!INSTALL=/usr")
 
     if re.match('e2fsprogs',builddir.meta['PKG']):
-      builddir.conf_test.append("--enable-dynamic-e2fsck --enable-fsck --enable-blkid-devmapper --enable-elf-shlibs")
-      builddir.conf_test.append("--disable-libblkid --disable-libuuid --disable-uuidd")
-      builddir.install_test.append("install-libs")
       builddir.env['DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
       builddir.env['STATIC_DEVMAPPER_LIBS']='-ldevmapper  -lpthread'
       builddir.env['LDFLAG_STATIC']=''
+      builddir.conf_test.append("--enable-dynamic-e2fsck --enable-fsck --enable-blkid-devmapper --enable-elf-shlibs")
+      builddir.conf_test.append("--disable-libblkid --disable-libuuid --disable-uuidd")
+      builddir.install_test.append("install-libs")
 
     if re.match('faac',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-drm --with-mp4v2")
@@ -320,8 +320,8 @@ class AutoconfPackage(Package):
       builddir.make_files.append("builds/unix/install.mk")
 
     if re.match('gamin',builddir.meta['PKG']):
-      builddir.conf_test.append("--libexecdir=/usr/sbin")
       builddir.env['CFLAGS']=builddir.cflags(exc='-fexceptions')+" -DG_CONST_RETURN=const"
+      builddir.conf_test.append("--libexecdir=/usr/sbin")
 
     if re.match('binutils',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-targets=i586-pc-linux-gnu,i586-pc-mingw32,x86_64-pc-linux-gnu,x86_64-pc-mingw32,i386-linux-uclibc,arm-linux-gnueabi,mipsel-linux-uclibc,m68k-linux-gnu")
@@ -332,17 +332,17 @@ class AutoconfPackage(Package):
 #     builddir.conf_test.append("--host=x86_64-pc-linux-gnu --build=i586-pc-linux-gnu")
 
     if re.match('fakeroot',builddir.meta['PKG']):
-      builddir.conf_files.append("configure.sh")
       builddir.env['CFLAGS']=builddir.cflags(f64='')
+      builddir.conf_files.append("configure.sh")
 
     if re.match('glibc',builddir.meta['PKG']):
-      builddir.conf_test.append("--libexecdir=/usr/lib/misc --localstatedir=/var --mandir=/usr/share/man --infodir=/usr/share/info")
-      builddir.conf_test.append("--enable-add-ons=libidn,nptl --enable-bind-now --enable-kernel=2.6.26 --disable-profile")
-      builddir.conf_test.append("--with-gd=no --without-cvs")
       builddir.env['CFLAGS']='-Os'
       builddir.env['CXXFLAGS']='-Os'
       builddir.env['LDFLAGS']='-s'
       builddir.use_dir('BUILD')
+      builddir.conf_test.append("--libexecdir=/usr/lib/misc --localstatedir=/var --mandir=/usr/share/man --infodir=/usr/share/info")
+      builddir.conf_test.append("--enable-add-ons=libidn,nptl --enable-bind-now --enable-kernel=2.6.26 --disable-profile")
+      builddir.conf_test.append("--with-gd=no --without-cvs")
       builddir.install_test.append("install_root=$ROOT")
       builddir.root_redir=[]
       #builddir.conf_add.append("i586-pc-linux-gnu")
@@ -451,8 +451,8 @@ class AutoconfPackage(Package):
       #uilddir.conf_test.append("--with-gallium-drivers=i915,ilo,nouveau,r300,r600,radeonsi,freedreno,svga,swrast")
 
     if re.match('mkvtoolnix',builddir.meta['PKG']):
-      # rake;rake install prefix=`pwd`/ROOT/usr
       builddir.env['SHELL']='/bin/bash'
+      # rake;rake install prefix=`pwd`/ROOT/usr
 
     if re.match('mpfr',builddir.meta['PKG']):
       builddir.env['CFLAGS']=builddir.cflags(exc='-fexceptions')
@@ -497,12 +497,12 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--disable-perl --disable-lua")
 
     if re.match('subversion',builddir.meta['PKG']):
-      builddir.install_test.append("install-swig-rb install-swig-py install-swig-pl")
       builddir.env['CC']="gcc -std=gnu99"
+      builddir.install_test.append("install-swig-rb install-swig-py install-swig-pl")
 
     if re.match('tar',builddir.meta['PKG']):
-      builddir.conf_test.append("--libexecdir=/etc")
       builddir.env['tar_cv_path_RSH']='/usr/bin/ssh'
+      builddir.conf_test.append("--libexecdir=/etc")
 
     if re.match('tcl|tk',builddir.meta['PKG']):
       builddir.use_dir('BUILD')
