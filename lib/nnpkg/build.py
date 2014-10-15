@@ -88,7 +88,7 @@ class Package(object):
     self.conf_type=type
 
   def setup(self,builddir):
-    if builddir.meta['PKG'] in ['bzip2','libebml','libmatroska','lua','haproxy','btrfs-progs']:
+    if builddir.meta['PKG'] in ['bzip2','libebml','libmatroska','lua','haproxy','btrfs-progs','rhash']:
       pass
     elif builddir.meta['PKG'] in ['botan','Botan']:
       builddir.command(['python','configure.py'],[],'setup')
@@ -131,6 +131,10 @@ class Package(object):
 
     if re.match('nspr|nss',builddir.meta['PKG']):
       builddir.make_files.append('config/rules.mk')
+
+    if re.match('rhash',builddir.meta['PKG']):
+      builddir.make_test.append("CFLAGS=$CFLAGS")
+      builddir.install_test.append("PREFIX=/usr LDFLAGS=$LDFLAGS")
 
     cmdline=["make"]
     possible_targets=shlex.split(" ".join(builddir.make_test))
