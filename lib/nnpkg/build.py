@@ -530,7 +530,7 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--prefix=/usr")
 
     if re.match('zsh',builddir.meta['PKG']):
-      builddir.conf_test.append("--enable-maildir-support --with-curses-terminfo --disable-gdbm")
+      builddir.conf_test.append("--enable-maildir-support --with-curses-terminfo --disable-gdbm --enable-pcre")
 
     env=[]
     for v in sorted(builddir.env.iterkeys()):
