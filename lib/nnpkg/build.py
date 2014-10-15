@@ -335,6 +335,9 @@ class AutoconfPackage(Package):
       builddir.env['CFLAGS']=builddir.cflags(f64='')
       builddir.conf_files.append("configure.sh")
 
+#   if re.match('gettext',builddir.meta['PKG']):
+#     builddir.conf_test.append("--without-emacs")
+
     if re.match('glibc',builddir.meta['PKG']):
       builddir.env['CFLAGS']='-Os'
       builddir.env['CXXFLAGS']='-Os'
@@ -486,6 +489,9 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--enable-utf8 --enable-unicode-properties --enable-pcre16 --enable-jit")
       builddir.conf_test.append("--enable-pcregrep-libz --enable-pcregrep-libbz2")
 
+    if re.match('poppler',builddir.meta['PKG']):
+      builddir.conf_test.append("--enable-zlib --enable-gtk-doc --enable-xpdf-headers")
+
     if re.match('ruby',builddir.meta['PKG']):
       builddir.make_files.append("common.mk")
 
@@ -514,6 +520,14 @@ class AutoconfPackage(Package):
       builddir.conf_files.append("src/auto/configure")
       ## flavour nogui (vs gtk2)
 #     builddir.conf_test.append("--disable-gui --without-x --disable-xim")
+
+    if re.match('webkit',builddir.meta['PKG']):
+      builddir.env['SHELL']='/bin/bash'
+      builddir.conf_test.append("--enable-geolocation --enable-web-sockets")
+
+    if re.match('wget',builddir.meta['PKG']):
+      #builddir.env['ac_cv_gnutls']='no'
+      builddir.conf_test.append("--with-openssl=yes --with-ssl=openssl")
 
     if re.match('wxWidgets|wxPython',builddir.meta['PKG']):
       # wxpython actually lives in a subdirectory - flavour?
