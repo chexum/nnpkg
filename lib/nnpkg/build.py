@@ -306,6 +306,11 @@ class AutoconfPackage(Package):
       # --enable-libschroedinger
       # --enable-libvo-aacenc --enable-libfreetype --enable-libcelt \
 
+    if re.match('file',builddir.meta['PKG']):
+      builddir.conf_test.append("--enable-fsect-man5")
+      builddir.make_test.append("pkgdatadir=/etc")
+      builddir.install_test.append("pkgdatadir=/etc")
+
     if re.match('freetype',builddir.meta['PKG']):
       builddir.conf_files.append("builds/unix/configure")
       builddir.make_files.append("builds/unix/install.mk")
