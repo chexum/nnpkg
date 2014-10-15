@@ -7,6 +7,7 @@ import string
 
 pkgnames={
 	'openssh':'ssh',
+	'ntfs-3g_ntfsprogs':'ntfsprogs',
 	'linux-pam':'pam',
 	'mesalib':'mesa',
 	'mesaglut':'mesa',
@@ -16,6 +17,8 @@ pkgnames={
 	'util-linux-ng':'util-linux',
 	'gtk+':'gtk',
 	'json-c':'json',
+	'fakeroot-ng':'fakeroot',
+	'libressl':'openssl',
 }
 
 categories={
