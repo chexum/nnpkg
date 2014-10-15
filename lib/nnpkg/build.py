@@ -88,7 +88,7 @@ class Package(object):
     self.conf_type=type
 
   def setup(self,builddir):
-    if builddir.meta['PKG'] in ['bzip2','libebml','libmatroska','lua','haproxy','btrfs-progs','rhash']:
+    if builddir.meta['PKG'] in ['bzip2','libebml','libmatroska','lua','haproxy','btrfs-progs','rhash','pigz','mdadm','lz4']:
       pass
     elif builddir.meta['PKG'] in ['botan','Botan']:
       builddir.command(['python','configure.py'],[],'setup')
