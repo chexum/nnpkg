@@ -916,13 +916,13 @@ class BuildDir:
       if log_proc: log_proc.terminate()
     if log_proc: log_proc.wait()
     if cmd_proc: cmd_proc.wait()
-    if cmd_proc.returncode and self.mustsucceed:
+    if cmd_proc.returncode!=0 and not self.mustsucceed:
       sys.exit(1)
 
     os.chdir(self.nn_root)
 
     if logdir:
-      with open("%s/donestate"%(logdir,),'a') as f:
+      with open("%s/donestate"%(logdir,),'a'):
         pass
 
     return 0
