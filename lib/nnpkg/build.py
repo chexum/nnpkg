@@ -232,7 +232,7 @@ class JamPackage(Package):
     builddir.command(['$SHELL','bootstrap.sh'],env,'setup')
 
   def build(self,builddir):
-    builddir.command(['./bjam','release','debug','threading=multi','toolset=gcc','--layout=tagged'],[],'build')
+    builddir.command(['./bjam','release','debug','threading=multi','toolset=gcc','--layout=tagged','--without-mpi'],[],'build')
 
   def install(self,builddir):
     builddir.command(['./bjam','install','--layout=tagged','--prefix=$ROOT/usr',],["ROOT=%s"%(builddir.get_destdir(),)],'install')
