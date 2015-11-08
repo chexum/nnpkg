@@ -508,8 +508,53 @@ class AutoconfPackage(Package):
       builddir.env['CXXFLAGS']=builddir.cflags(exc='-fexceptions')
       builddir.conf_test.append("--build=i386-pc-linux-gnu")
 
+    if re.match('mysql',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-mysqld-user=mysql --emable-thread-safe-client")
+      builddir.conf_test.append("--without-bench --with-extra-charsets=complex")
+      builddir.conf_test.append("--localstatedir=/var/lib/mysql --libexecdir=/usr/sbin")
+
     if re.match('neon',builddir.meta['PKG']):
       builddir.conf_test.append("--with-ssl=openssl")
+
+    if re.match('net-snmp',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-sys-contact=snmp --with-sys-location=Unknown --with-logfile=none")
+      builddir.conf_test.append("--with-persistent-directory=/var/lib/snmp --with-default-snmp-version=2")
+      builddir.conf_test.append("--without-python-modules --without-perl-modules")
+      builddir.install_test.append('!INSTALL=')
+
+    if re.match('nginx',builddir.meta['PKG']):
+      builddir.conf_files.append("auto/options")
+      builddir.conf_test.append("--prefix=/usr --pid-path=/var/run/nginx.pid")
+      builddir.conf_test.append("--error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log")
+      builddir.conf_test.append("--conf-path=/etc/nginx/nginx.conf --lock-path=/var/run/nginx.lock")
+      builddir.conf_test.append("--http-client-body-temp-path=/var/cache/nginx/client_body --http-proxy-temp-path=/var/cache/nginx/proxy")
+      builddir.conf_test.append("--http-fastcgi-temp-path=/var/cache/nginx/fastcgi --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp")
+      builddir.conf_test.append("--http-scgi-temp-path=/var/cache/nginx/scgi_temp")
+      # essential
+      builddir.conf_test.append("--with-http_ssl_module --with-http_v2_module")
+      # useful
+      builddir.conf_test.append("--with-http_stub_status_module --with-http_realip_module")
+      # extra tools
+      builddir.conf_test.append("--with-http_sub_module --with-http_addition_module")
+      builddir.conf_test.append("--with-http_gzip_static_module --with-http_random_index_module")
+      builddir.conf_test.append("--with-http_degradation_module --with-http_secure_link_module")
+      # --with-http_stub_status_module --with-http_random_index_module")
+
+    if re.match('nilfs-utils',builddir.meta['PKG']):
+      builddir.conf_test.append("--without-selinux")
+
+    if re.match('node',builddir.meta['PKG']):
+      builddir.env['SHELL']='python'
+
+    if re.match('nut',builddir.meta['PKG']):
+      builddir.conf_test.append("--datarootdir=/usr/share/nut --sysconfdir=/etc/nut --mandir=/usr/share/man --with-dev --wixh-doc")
+      builddir.conf_test.append("--with-statepath=/var/lib/ups --with-ssl --with-user=ups --with-group=ups")
+
+    if re.match('ntp',builddir.meta['PKG']):
+      builddir.conf_test.append("--disable-all-clocks")
+      builddir.conf_test.append("--enable-RAWDCF --enable-LOCAL-CLOCK --enable-DUMBCLOCK --enable-NMEA")
+      builddir.conf_test.append("--enable-ARCRON-MSF")
+      builddir.conf_test.append("--enable-linuxcaps --enable-ipv6 --enable-tickadj=120")
 
     if re.match('ocaml',builddir.meta['PKG']):
       builddir.conf_add.append("--prefix /usr")
