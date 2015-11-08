@@ -365,14 +365,9 @@ class AutoconfPackage(Package):
 
     if re.match('ffmpeg',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-version3 --enable-gpl --enable-nonfree --enable-swscale --enable-postproc --disable-debug")
-      builddir.conf_test.append("--enable-libfaac --enable-libmp3lame")
-      builddir.conf_test.append("--enable-libx264 --enable-libvpx")
-      builddir.conf_test.append("--enable-libx264 --enable-libxvid")
-      # ./configure --prefix=/usr --enable-shared
-      # --enable-libdirac --enable-libfaac
-      # --enable-libspeex --enable-libvorbis --enable-libtheora \
-      # --enable-libschroedinger
-      # --enable-libvo-aacenc --enable-libfreetype --enable-libcelt \
+      builddir.conf_test.append("--enable-libfaac --enable-libmp3lame --enable-libspeex --enable-libvorbis --enable-libcelt")
+      builddir.conf_test.append("--enable-libx264 --enable-libvpx --enable-libtheora --enable-libschroedinger")
+      builddir.conf_test.append("--enable-libdirac --enable-libxvid --enable-libvo-aacenc")
 
     if re.match('file',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-fsect-man5")
