@@ -19,6 +19,11 @@ pkgnames={
 	'json-c':'json',
 	'fakeroot-ng':'fakeroot',
 	'libressl':'openssl',
+	'nut':'networkupstools',
+	'zope.interface':'zope_interface',
+	'zope.component':'zope_component',
+	'zope.event':'zope_event',
+	'python2-pythondialog':'python2_pythondialog',
 }
 
 categories={
@@ -531,6 +536,7 @@ def selftest():
 		'json-c:-:0.9::.tar.gz/json',
 		'libusb-compat:-:0.1.5::.tar.bz2/libusb_compat',
 		'libusbx:-:1.0.17::.tar.bz2/libusb',
+		'yubikey: personalization tool installer-win signed::::.msi',
 		):
 		exp=''.join(test.split(':'))
 		w=exp.split('/')
