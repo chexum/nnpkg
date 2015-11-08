@@ -575,16 +575,16 @@ class AutoconfPackage(Package):
     if builddir.meta['PKG'] == 'p11-kit':
       builddir.conf_test.append("--without-trust-paths")
 
-    if re.match('qemu',builddir.meta['PKG']):
-      builddir.env['CFLAGS']=builddir.cflags(exc='')+' -I/usr/X11/include'
-      builddir.env['LDFLAGS']=builddir.ldflags()+' -L/usr/X11/lib'
-
     if re.match('pcre',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-utf8 --enable-unicode-properties --enable-pcre16 --enable-jit")
       builddir.conf_test.append("--enable-pcregrep-libz --enable-pcregrep-libbz2")
 
     if re.match('poppler',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-zlib --enable-gtk-doc --enable-xpdf-headers")
+
+    if re.match('qemu',builddir.meta['PKG']):
+      builddir.env['CFLAGS']=builddir.cflags(exc='')+' -I/usr/X11/include'
+      builddir.env['LDFLAGS']=builddir.ldflags()+' -L/usr/X11/lib'
 
     if re.match('ruby',builddir.meta['PKG']):
       builddir.make_files.append("common.mk")
