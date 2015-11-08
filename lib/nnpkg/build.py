@@ -12,13 +12,13 @@ def confregex(opts):
       enopt=re.match("^\!?--(en|dis)able-(.*?)($|=.*)",opt)
       if enopt: res.append(r'(\s*--(en|dis)able-%s(\s|\[|=))'%(enopt.group(2),))
       else:
-        wopt = re.match("^\!?--with(|out)-([a-z0-9-]+).*",opt)
+        wopt = re.match("^\!?--with(|out)-([a-z0-9_-]+)(\s.*|=.*)",opt)
         if wopt: res.append(r'(\s*--with(|out)-%s(\s|=))'%(wopt.group(2),))
         else:
           varopt=re.match("^\!?(.*?)\s*=\s*(.*)$",opt)
           if varopt: res.append(r'(\s*%s=[A-Z]+\s)'%(varopt.group(1),))
           else:
-            longopt=re.match("^\!?--([a-z0-9-]+)$",opt)
+            longopt=re.match("^\!?--([a-z0-9_-]+)$",opt)
             if longopt: res.append(r'(\s+--%s(\s|=))'%(longopt.group(1),))
             else: res.append('((?!x)x)')
   return res
