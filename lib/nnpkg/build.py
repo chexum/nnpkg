@@ -481,6 +481,9 @@ class AutoconfPackage(Package):
     if re.match('icu4c',builddir.meta['PKG']):
       builddir.use_dir('BUILD')
 
+    if re.match('iptables',builddir.meta['PKG']):
+      builddir.conf_test.append("--exec-prefix= --sbindir=/sbin")
+
     if re.match('libbonobo',builddir.meta['PKG']):
       # DEPRECATED
       builddir.conf_test.append("--libexecdir=/usr/bin")
@@ -500,6 +503,9 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--with-icu")
 
     # ldns - config/make/install in examples&drill -- flavour?
+
+    if re.match('Linux-PAM',builddir.meta['PKG']):
+      builddir.conf_test.append("--libdir=/lib")
 
     if re.match('LVM2',builddir.meta['PKG']):
       builddir.conf_test.append("--sbindir=/sbin --libdir=/lib --exec-prefix= --enable-static_link")
@@ -588,9 +594,16 @@ class AutoconfPackage(Package):
     if builddir.meta['PKG'] == 'p11-kit':
       builddir.conf_test.append("--without-trust-paths")
 
+    if re.match('pinentry',builddir.meta['PKG']):
+      builddir.conf_test.append("--disable-pinentry-qt4")
+
     if re.match('pcre',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-utf8 --enable-unicode-properties --enable-pcre16 --enable-jit")
       builddir.conf_test.append("--enable-pcregrep-libz --enable-pcregrep-libbz2")
+
+    if re.match('pcsc-lite',builddir.meta['PKG']):
+      builddir.conf_test.append("--enable-usbdropdir=/usr/lib/pcsc/drivers --enable-muscledropdir=/usr/lib/pcsc/services")
+      builddir.conf_test.append("--enable-extendedapdu --enable-debugatr")
 
     if re.match('poppler',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-zlib --enable-gtk-doc --enable-xpdf-headers")
@@ -621,6 +634,9 @@ class AutoconfPackage(Package):
       builddir.use_dir('BUILD')
       builddir.conf_test.append("--without-tzdata")
       builddir.install_test.append("install-private-headers")
+
+    if re.match('util-linux',builddir.meta['PKG']):
+      builddir.conf_test.append("--enable-arch --enable-kill --enable-raw --enable-rdev --enable-write --disable-mountpoint")
 
     if re.match('vim',builddir.meta['PKG']):
       builddir.conf_test.append("--disable-selinux --enable-pythoninterp --enable-cscope --enable-multibyte --enable-gui=gtk2")
