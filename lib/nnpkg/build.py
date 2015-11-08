@@ -382,8 +382,8 @@ class AutoconfPackage(Package):
       builddir.env['CFLAGS']=builddir.cflags(exc='-fexceptions')+" -DG_CONST_RETURN=const"
       builddir.conf_test.append("--libexecdir=/usr/sbin")
 
-#   if re.match('gettext',builddir.meta['PKG']):
-#     builddir.conf_test.append("--without-emacs")
+    if re.match('gettext',builddir.meta['PKG']):
+      builddir.conf_test.append("--without-emacs")
 
     if re.match('glibc',builddir.meta['PKG']):
       builddir.env['CFLAGS']='-Os'
