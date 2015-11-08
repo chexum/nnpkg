@@ -125,7 +125,8 @@ class Package(object):
       builddir.install_test.append("INSTALL_TOP=/usr")
 
     if builddir.meta['PKG'] in ['libebml','libmatroska']:
-      builddir.use_dir('make/linux')
+      if os.path.exists(os.path.join(builddir.cwd,'make/linux')):
+        builddir.use_dir('make/linux')
       builddir.make_test.append("prefix=/usr WARNINGFLAGS=$CXXFLAGS")
       builddir.install_test.append("prefix=/usr")
 
