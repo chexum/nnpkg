@@ -130,6 +130,10 @@ class Package(object):
       builddir.make_test.append("prefix=/usr WARNINGFLAGS=$CXXFLAGS")
       builddir.install_test.append("prefix=/usr")
 
+    if re.match('mdadm',builddir.meta['PKG']):
+      builddir.make_test.append("RUN_DIR=/dev/.adm")
+      builddir.install_test.append("RUN_DIR=/dev/.adm")
+
     if re.match('nspr|nss',builddir.meta['PKG']):
       builddir.make_files.append('config/rules.mk')
 
@@ -287,6 +291,14 @@ class AutoconfPackage(Package):
     if re.match('cloog',builddir.meta['PKG']):
       builddir.conf_test.append("--with-isl=system")
 
+    if re.match('collectd',builddir.meta['PKG']):
+      builddir.env['ac_cv_lib_iptc_iptc_init']='yes'
+      builddir.env['ac_cv_type_iptc_handle']='yes'
+      builddir.env['ac_cv_type_ip6tc_handle']='yes'
+      #builddir.conf_test.append("--disable-iptables")
+      builddir.env['CONFIG_SHELL']='/bin/bash'
+      builddir.conf_test.append("--enable-nut")
+
     if re.match('cups',builddir.meta['PKG']):
       builddir.conf_test.append("--with-cups-user=cups --with-cups-group=cups --disable-pam --disable-slp")
       builddir.make_files.append('Makedefs')
@@ -296,6 +308,20 @@ class AutoconfPackage(Package):
       builddir.use_dir('BUILD')
       builddir.conf_test.append("--enable-tcl --enable-cxx --enable-compat185 --enable-java --with-tcl=/usr/lib")
       builddir.install_test.append("docdir=/usr/share/doc/db")
+
+    if re.match('dhcp',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-srv-lease-file=/var/lib/dhcp/dhcpd.leases")
+      builddir.conf_test.append("--with-cli-lease-file=/var/lib/dhcp/dhclient.leases")
+      builddir.conf_test.append("--with-srv6-lease-file=/var/lib/dhcp/dhcpd6.leases")
+      builddir.conf_test.append("--with-cli6-lease-file=/var/lib/dhcp/dhclient6.leases")
+      builddir.env['CFLAGS']=builddir.cflags(opt="-Os")
+      builddir.make_test.append("DEBUG='-Os -DNOMINUM' VARDB=/var/lib/dhcp")
+#        perl -pi -e 's,/var/state/dhcp,/var/lib/dhcp,g' includes/cf/linux.h
+#        make DEBUG='-Os -DNOMINUM' VARDB=/var/lib/dhcp
+
+
+    if re.match('djvulibre',builddir.meta['PKG']):
+      builddir.conf_test.append("--with-qt --enable-threads --enable-djview")
 
     if builddir.meta['PKG'] == 'doxygen':
       builddir.env['CFLAGS']=builddir.cflags(exc='-fno-exceptions -fno-rtti')
