@@ -350,6 +350,9 @@ class AutoconfPackage(Package):
       builddir.conf_test.append("--disable-libblkid --disable-libuuid --disable-uuidd")
       builddir.install_test.append("install-libs")
 
+    if re.match('esound',builddir.meta['PKG']):
+      builddir.env['CFLAGS']=builddir.cflags(f64='')
+
     if re.match('faac',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-drm --with-mp4v2")
 
@@ -442,6 +445,13 @@ class AutoconfPackage(Package):
       ## flavour i386 vs i686
       builddir.conf_test.append("--build=i386-pc-linux-gnu")
 
+    if re.match('gnome-settings-daemon|gnome-keyring',builddir.meta['PKG']):
+      builddir.conf_test.append("--x-libraries=/usr/X11R6/lib --libexecdir=/usr/bin")
+
+    if re.match('gnome-vfs',builddir.meta['PKG']):
+      builddir.env['CFLAGS']=builddir.cflags()+'-UG_DISABLE_DEPRECATED';
+      builddir.conf_test.append("--enable-cdda")
+
     if re.match('gnupg',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-gpgtar --libexecdir=/usr/lib/gnupg")
 
@@ -453,6 +463,10 @@ class AutoconfPackage(Package):
 
     if re.match('guile',builddir.meta['PKG']):
       builddir.env['CFLAGS']=builddir.cflags(opt='-O2',fp='',exc='')
+
+    if re.match('gupnp',builddir.meta['PKG']):
+      #   --enable-introspection=[no/auto/yes]
+      builddir.conf_test.append("--enable-introspection=no")
 
     if re.match('httpd',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-layout=RedHat --exec-prefix=/usr --libexecdir=/usr/lib/apache/so")
@@ -471,6 +485,10 @@ class AutoconfPackage(Package):
 
     if re.match('icu4c',builddir.meta['PKG']):
       builddir.use_dir('BUILD')
+
+    if re.match('libbonobo',builddir.meta['PKG']):
+      # DEPRECATED
+      builddir.conf_test.append("--libexecdir=/usr/bin")
 
     if re.match('libdv',builddir.meta['PKG']):
       builddir.conf_test.append("--disable-xv")
