@@ -136,7 +136,16 @@ class Package(object):
       builddir.make_test.append("CFLAGS=$CFLAGS")
       builddir.install_test.append("PREFIX=/usr LDFLAGS=$LDFLAGS")
 
-    cmdline=["make"]
+    # iterate make_files[]?
+    if os.path.exists(os.path.join(builddir.cwd,'Makefile')):
+      cmdline=["make"]
+    elif os.path.exists(os.path.join(builddir.cwd,'GNUmakefile')):
+      cmdline=["make"]
+    elif os.path.exists(os.path.join(builddir.cwd,'Rakefile')):
+      cmdline=["rake"]
+    else:
+      raise "No Makefile found"
+
     possible_targets=shlex.split(" ".join(builddir.make_test))
     cmdline.extend(grep_all(possible_targets,builddir.make_files,builddir.get_use_dir()))
     builddir.command(cmdline,[],'build')
@@ -156,7 +165,13 @@ class Package(object):
       cmdline=builddir.root_redir
     else:
       cmdline=[]
-    cmdline.extend(["make","DESTDIR=%s"%(destdir,)])
+
+    if os.path.exists(os.path.join(builddir.cwd,'Makefile')):
+      cmdline.extend(["make","DESTDIR=%s"%(destdir,)])
+    elif os.path.exists(os.path.join(builddir.cwd,'Rakefile')):
+      cmdline.extend(["rake","DESTDIR=%s"%(destdir,),'install'])
+    else:
+      raise "No Makefile found"
 
     possible_targets=shlex.split(" ".join(builddir.install_test))
     cmdline.extend(grep_all(possible_targets,builddir.make_files,builddir.get_use_dir()))
