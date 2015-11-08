@@ -356,6 +356,10 @@ class AutoconfPackage(Package):
     if re.match('faad2',builddir.meta['PKG']):
       builddir.conf_test.append("--with-drm --with-mpeg4ip")
 
+    if re.match('fakeroot',builddir.meta['PKG']):
+      builddir.env['CFLAGS']=builddir.cflags(f64='')
+      builddir.conf_files.append("configure.sh")
+
     if re.match('ffmpeg',builddir.meta['PKG']):
       builddir.conf_test.append("--enable-version3 --enable-gpl --enable-nonfree --enable-swscale --enable-postproc --disable-debug")
       builddir.conf_test.append("--enable-libfaac --enable-libmp3lame")
@@ -379,10 +383,6 @@ class AutoconfPackage(Package):
     if re.match('gamin',builddir.meta['PKG']):
       builddir.env['CFLAGS']=builddir.cflags(exc='-fexceptions')+" -DG_CONST_RETURN=const"
       builddir.conf_test.append("--libexecdir=/usr/sbin")
-
-    if re.match('fakeroot',builddir.meta['PKG']):
-      builddir.env['CFLAGS']=builddir.cflags(f64='')
-      builddir.conf_files.append("configure.sh")
 
 #   if re.match('gettext',builddir.meta['PKG']):
 #     builddir.conf_test.append("--without-emacs")
