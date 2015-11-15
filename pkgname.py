@@ -16,7 +16,6 @@ pkgnames={
 	'libgsasl':'gsasl',
 	'util-linux-ng':'util-linux',
 	'gtk+':'gtk',
-	'json-c':'json',
 	'fakeroot-ng':'fakeroot',
 	'libressl':'openssl',
 	'nut':'networkupstools',
@@ -302,7 +301,8 @@ def pkgsplitname(fn):
 			w[0]=m.group(1)
 			w[1]=''.join([m.group(2),w[1]])
 
-	if w[0] in ['jpegsrc','boost','libpng','dz','krb5','openssl','sysvinit','oggenc','qt','pam']:
+  # more package names requiring specialised splitting
+	if w[0] in ['jpegsrc','boost','libpng','dz','krb5','openssl','sysvinit','oggenc','qt','pam','json']:
 		# jpegsrc.v8a.tar.gz
 		if w[0] == 'jpegsrc':
 			w[0] = 'src'
@@ -333,6 +333,9 @@ def pkgsplitname(fn):
 		elif w[0] == 'pam':
 			if re.match(r'^pam_.*',fn):
 				w = re.split(r'([-.])',fn)
+		elif w[0] == 'json':
+			w=w[3:]
+			w.insert(0,'json-c')
 		else:
 		# boost-jam
 			w = re.split(r'(jam|[-_.])',fn)
@@ -534,7 +537,7 @@ def selftest():
 		'LVM2:.:2.02.64::.tgz',
 		'sqlite:-autoconf-:3070603::.tar.gz/sqlite3',
 		'gtk+:-:2.24.8::.tar.xz/gtk',
-		'json-c:-:0.9::.tar.gz/json',
+		'json-c:-:0.9::.tar.gz',
 		'libusb-compat:-:0.1.5::.tar.bz2/libusb_compat',
 		'libusbx:-:1.0.17::.tar.bz2/libusb',
 		'yubikey: personalization tool installer-win signed::::.msi',
