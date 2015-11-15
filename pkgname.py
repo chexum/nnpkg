@@ -285,10 +285,11 @@ def pkgsplitname(fn):
 	# special handling - either join or separate version from pkg name
 	m = re.match(r'^(.*?)(\d+)$',w[0])
 	# oggenc2.85srcs.zip
+	# go1.5.1.tar.gz
 	if m and string.lower(m.group(1)) in [
 			'iozone','leechr','dcron','gc',
 			'oggenc','tcl','tk','xdelta','moconti','bash',
-			'readline','ncurses',]:
+			'readline','ncurses','go',]:
 		w[0]=m.group(1)
 		w.insert(1,m.group(2))
 	elif re.search(r'([Gg]tk\+|[Cc]\+)',fn):
@@ -537,6 +538,7 @@ def selftest():
 		'libusb-compat:-:0.1.5::.tar.bz2/libusb_compat',
 		'libusbx:-:1.0.17::.tar.bz2/libusb',
 		'yubikey: personalization tool installer-win signed::::.msi',
+		'go::1.5.1:.src:.tar.gz',
 		):
 		exp=''.join(test.split(':'))
 		w=exp.split('/')
