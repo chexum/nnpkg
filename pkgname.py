@@ -273,7 +273,7 @@ def pkgsplitname(fn):
 	# tags that better stand separate from the version number (mostly better)
 	TAGS='src all snapshot bin source orig open patch mingw32 release stable final alpha beta full'.split(' ')
 	TAGS.extend('package languages unixsrc wip linux installer'.split(' '))
-	TYPE='src all snapshot current head git cvs svn trunk nightly'.split(' ')
+	TYPE='src all snapshot current head git cvs svn trunk nightly setup'.split(' ')
 	# outside extensions, always at the end of the name
 	EXTO='asc sig sign pgp gpg md5 sha1 sha256 sha512 sha256sum rsa dsa part sha1sum md5sum checksum txt install exe msi'.split(' ')
 	EXTO.extend('zoo arc arj lha lzh rar'.split(' '))
