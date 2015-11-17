@@ -248,10 +248,7 @@ vendors={
 
 	'pam_yubico':'yubico',
 	'ykclient':'yubico',
-	'ykpers':'yubico',
 	'libyubikey':'yubico',
-	'yubico-piv-tool':'yubico',
-	'libykneomgr':'yubico',
 
 	'linux-pam':'Linux',
 	'pam':'Linux',
@@ -545,7 +542,6 @@ def selftest():
 		'libusbx:-:1.0.17::.tar.bz2/libusb',
 		'yubikey: personalization tool installer-win signed::::.msi',
 		'go::1.5.1:.src:.tar.gz',
-		'userspace-rcu:-:0.9.1::.tar.bz2.asc',
 		):
 		exp=''.join(test.split(':'))
 		w=exp.split('/')

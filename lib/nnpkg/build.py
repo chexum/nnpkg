@@ -153,7 +153,7 @@ class Package(object):
     elif os.path.exists(os.path.join(builddir.cwd,'Rakefile')):
       cmdline=["rake"]
     else:
-      raise "No Makefile found"
+      raise "No Makefile found in "+builddir.cwd
 
     possible_targets=shlex.split(" ".join(builddir.make_test))
     cmdline.extend(grep_all(possible_targets,builddir.make_files,builddir.get_use_dir()))
@@ -177,10 +177,12 @@ class Package(object):
 
     if os.path.exists(os.path.join(builddir.cwd,'Makefile')):
       cmdline.extend(["make","DESTDIR=%s"%(destdir,)])
+    elif os.path.exists(os.path.join(builddir.cwd,'GNUmakefile')):
+      cmdline.extend(["make","DESTDIR=%s"%(destdir,)])
     elif os.path.exists(os.path.join(builddir.cwd,'Rakefile')):
       cmdline.extend(["rake","DESTDIR=%s"%(destdir,),'install'])
     else:
-      raise "No Makefile found"
+      raise "No Makefile found in "+builddir.cwd
 
     possible_targets=shlex.split(" ".join(builddir.install_test))
     cmdline.extend(grep_all(possible_targets,builddir.make_files,builddir.get_use_dir()))
