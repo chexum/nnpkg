@@ -248,7 +248,10 @@ vendors={
 
 	'pam_yubico':'yubico',
 	'ykclient':'yubico',
+	'ykpers':'yubico',
 	'libyubikey':'yubico',
+	'yubico-piv-tool':'yubico',
+	'libykneomgr':'yubico',
 
 	'linux-pam':'Linux',
 	'pam':'Linux',
