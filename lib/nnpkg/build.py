@@ -92,6 +92,8 @@ class Package(object):
       pass
     elif builddir.meta['PKG'] in ['botan','Botan']:
       builddir.command(['python','configure.py'],[],'setup')
+    elif os.path.exists(os.path.join(builddir.cwd,'Imakefile')):
+      builddir.command(['xmkmf','-a'],[],'setup')
     else:
       raise "Can't configure an unknown package!"
 
