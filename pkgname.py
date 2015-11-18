@@ -23,6 +23,7 @@ pkgnames={
 	'zope.component':'zope_component',
 	'zope.event':'zope_event',
 	'python2-pythondialog':'python2_pythondialog',
+	'libnice':'nice',
 }
 
 categories={
