@@ -447,8 +447,9 @@ class AutoconfPackage(Package):
     if re.match('gnome-settings-daemon|gnome-keyring',builddir.meta['PKG']):
       builddir.conf_test.append("--x-libraries=/usr/X11R6/lib --libexecdir=/usr/bin")
 
-    if re.match('gnome-vfs',builddir.meta['PKG']):
-      builddir.env['CFLAGS']=builddir.cflags()+'-UG_DISABLE_DEPRECATED';
+    if re.match('gnome-vfs|libgnome|libsoup',builddir.meta['PKG']):
+      builddir.env['CFLAGS']=builddir.cflags()+' -UG_DISABLE_DEPRECATED';
+      builddir.env['PATH']='/bin:/usr/bin'
       builddir.conf_test.append("--enable-cdda")
 
     if re.match('gnupg',builddir.meta['PKG']):
