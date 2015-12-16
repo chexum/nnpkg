@@ -793,8 +793,11 @@ class BuildDir:
     # Some packages using cmake and configure use cmake for other platforms
     # and less Unixy features - no symbol versioning, no tools, no .la files.
     # fMake the exceptions here
-    if self.check_file('configure') and self.meta['PKG'] not in ['llvm','cfe']:
+    if self.check_file('configure') and self.meta['PKG'] not in ['llvm','cfe','cmake']:
       self.pkg = AutoconfPackage('./configure')
+    # cmake
+    elif self.check_file('bootstrap'):
+      self.pkg = AutoconfPackage('./bootstrap')
     # Berkeley db
     elif self.check_file('dist/configure'):
       self.pkg = AutoconfPackage('dist/configure')
