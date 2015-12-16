@@ -932,7 +932,8 @@ class BuildDir:
       if log_proc: log_proc.terminate()
     if log_proc: log_proc.wait()
     if cmd_proc: cmd_proc.wait()
-    if cmd_proc.returncode!=0 and not self.mustsucceed:
+    if cmd_proc.returncode!=0 and self.mustsucceed:
+      print "command exited with %d"%(cmd_proc.returncode,)
       sys.exit(1)
 
     os.chdir(self.nn_root)
