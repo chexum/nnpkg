@@ -97,7 +97,7 @@ class Package(object):
     elif os.path.exists(os.path.join(builddir.cwd,'Imakefile')):
       builddir.command(['xmkmf','-a'],[],'setup')
     else:
-      raise "Can't configure an unknown package!"
+      raise RuntimeError("Can't configure an unknown package!")
 
   def build(self,builddir):
     if re.match('attr|acl',builddir.meta['PKG']):
@@ -157,7 +157,7 @@ class Package(object):
     elif os.path.exists(os.path.join(builddir.cwd,'Rakefile')):
       cmdline=["rake"]
     else:
-      raise "No Makefile found in "+builddir.cwd
+      raise RuntimeError("No Makefile found in "+builddir.cwd)
 
     possible_targets=shlex.split(" ".join(builddir.make_test))
     cmdline.extend(grep_all(possible_targets,builddir.make_files,builddir.get_use_dir()))
@@ -186,7 +186,7 @@ class Package(object):
     elif os.path.exists(os.path.join(builddir.cwd,'Rakefile')):
       cmdline.extend(["rake","DESTDIR=%s"%(destdir,),'install'])
     else:
-      raise "No Makefile found in "+builddir.cwd
+      raise RuntimeError("No Makefile found in "+builddir.cwd)
 
     possible_targets=shlex.split(" ".join(builddir.install_test))
     cmdline.extend(grep_all(possible_targets,builddir.make_files,builddir.get_use_dir()))
