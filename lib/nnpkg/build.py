@@ -7,7 +7,7 @@ def confregex(opts):
   res=[]
   for opt in opts:
     diropt=re.match("^\!?\[?(.*)=(/.*)(\]|$)",opt)
-    if diropt: res.append(r'(\s*\[?%s=)'%(diropt.group(1),));
+    if diropt: res.append(r'(\s*\[?%s[= ])'%(diropt.group(1),));
     else:
       enopt=re.match("^\!?--(en|dis)able-(.*?)($|=.*)",opt)
       if enopt: res.append(r'(\s*--(en|dis)able-%s(\s|\[|=))'%(enopt.group(2),))
@@ -16,7 +16,7 @@ def confregex(opts):
         if wopt: res.append(r'(\s*--with(|out)-%s(\s|=))'%(wopt.group(2),))
         else:
           varopt=re.match("^\!?(.*?)\s*=\s*(.*)$",opt)
-          if varopt: res.append(r'(\s*%s=[A-Z]+\s)'%(varopt.group(1),))
+          if varopt: res.append(r'(\s*%s=[012A-Za-z/]+\s)'%(varopt.group(1),))
           else:
             longopt=re.match("^\!?--([a-z0-9_-]+)$",opt)
             if longopt: res.append(r'(\s+--%s(\s|=))'%(longopt.group(1),))
@@ -26,8 +26,10 @@ def confregex(opts):
 def makeregex(targets):
   res = []
   for t in targets:
-    opt=re.match(r"\!?\s*(.*)\s*\??\s*=\s*(.*)\s*",t)
-    if opt: res.append(r'^\s*%s\s*\??\s*='%(opt.group(1),))
+    opt=re.match(r"\!?\s*(.*)\s*\??\s*?=\s*(.*)\s*",t)
+    #f opt: res.append(r'^\s*%s\s*\??\s*[:?]?='%(opt.group(1),))
+    # f opt: res.append(r'\s+%s\s*\??\s*[:?]?='%(opt.group(1),))
+    if opt: res.append(r'^\s*%s\s*\??\s*[:?]?='%(opt.group(1),))
     else: res.append(r'((^|[^#:]+\s)%s(:|\s+[^#:]*:))'%(t,))
   return res
 
